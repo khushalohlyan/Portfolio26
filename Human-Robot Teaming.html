@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human-Robot Teaming - MSc Research Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f4f4f0;
+    --bg3: #eeeee8;
+    --human: #1B4FD8;
+    --human-light: rgba(27,79,216,0.1);
+    --robot: #D63B0F;
+    --robot-light: rgba(214,59,15,0.08);
+    --gold: #B8860B;
+    --text: #1a1a1a;
+    --muted: #666666;
+    --light: #999999;
+    --border: #e0e0d8;
+    --border2: #cccccc;
+    --shadow: 0 1px 16px rgba(0,0,0,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.75; overflow-x: hidden; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--text);
+    padding: 16px 0;
+  }
+  nav .container { display: flex; align-items: center; justify-content: space-between; }
+  .nav-left { display: flex; align-items: center; gap: 16px; }
+  .nav-vol { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+  .nav-title { font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 700; }
+  .nav-right { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  .hero { border-bottom: 2px solid var(--text); }
+  .hero-top {
+    display: grid; grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-left { padding: 64px 48px 64px 0; border-right: 1px solid var(--border); }
+  .hero-right { padding: 64px 0 64px 48px; display: flex; flex-direction: column; justify-content: space-between; }
+  .hero-kicker {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    border-left: 3px solid var(--human); padding-left: 12px; margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Inter', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(32px, 3.8vw, 52px); line-height: 1.1;
+    letter-spacing: -0.5px; margin-bottom: 24px;
+  }
+  .hero h1 em { font-style: italic; color: var(--human); }
+  .hero-desc { font-size: 16px; color: var(--muted); line-height: 1.75; max-width: 480px; }
+
+  .hero-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .hero-meta-item { background: var(--bg); padding: 20px 24px; }
+  .hmi-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .hmi-val { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 15px; }
+
+  .hero-stats { border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(5, 1fr); }
+  .hs-item { padding: 28px 0; text-align: center; border-right: 1px solid var(--border); }
+  .hs-item:last-child { border-right: none; }
+  .hs-val { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 30px; margin-bottom: 4px; }
+  .hs-val.h { color: var(--human); } .hs-val.r { color: var(--robot); }
+  .hs-lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.5px; }
+
+  section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+  .section-header { display: flex; align-items: baseline; gap: 20px; margin-bottom: 48px; }
+  .sec-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--light); letter-spacing: 1px; }
+  h2 { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: clamp(24px, 3vw, 36px); letter-spacing: -0.3px; }
+  .sec-rule { flex: 1; height: 1px; background: var(--border); }
+  .section-lead { font-size: 17px; color: var(--muted); max-width: 640px; margin-bottom: 40px; line-height: 1.8; }
+
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .cell { background: var(--bg); padding: 28px; }
+  .cell h3 { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 10px; }
+  .cell p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+  .cell-icon { font-size: 24px; margin-bottom: 14px; }
+  .cell-num { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 36px; margin-bottom: 4px; }
+  .cell-num.h { color: var(--human); } .cell-num.r { color: var(--robot); }
+  .cell-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  .robot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 2px solid var(--text); }
+  .robot-card { padding: 32px 28px; position: relative; overflow: hidden; }
+  .robot-card + .robot-card { border-left: 1px solid var(--border); }
+  .robot-dot { width: 40px; height: 40px; border-radius: 50%; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .robot-dot.blue { background: rgba(27,79,216,0.12); border: 2px solid var(--human); }
+  .robot-dot.red { background: rgba(214,59,15,0.1); border: 2px solid var(--robot); }
+  .robot-dot.pink { background: rgba(220,40,160,0.1); border: 2px solid #DC28A0; }
+  .robot-name { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+  .robot-name.blue { color: var(--human); }
+  .robot-name.red { color: var(--robot); }
+  .robot-name.pink { color: #DC28A0; }
+  .robot-spec { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .robot-cap { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--light); margin-top: 12px; margin-bottom: 8px; }
+  .ability-tag { display: inline-block; font-size: 11px; background: var(--bg2); border: 1px solid var(--border); padding: 3px 10px; border-radius: 3px; margin: 2px 2px 2px 0; font-family: 'JetBrains Mono', monospace; }
+
+  .loa-list { border: 1px solid var(--border); }
+  .loa-item { display: grid; grid-template-columns: 80px 1fr 1fr; border-bottom: 1px solid var(--border); }
+  .loa-item:last-child { border-bottom: none; }
+  .loa-num { padding: 20px 24px; border-right: 1px solid var(--border); display: flex; align-items: center; justify-content: center; background: var(--bg2); }
+  .loa-num span { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 24px; color: var(--muted); }
+  .loa-body { padding: 20px 24px; border-right: 1px solid var(--border); }
+  .loa-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .loa-desc { font-size: 13px; color: var(--muted); }
+  .loa-meta { padding: 20px 24px; display: flex; align-items: flex-start; gap: 12px; flex-direction: column; justify-content: center; }
+  .loa-score { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+  .loa-bar-wrap { flex: 1; height: 6px; background: var(--bg3); border-radius: 2px; width: 100%; }
+  .loa-bar { height: 100%; border-radius: 2px; }
+
+  .chart-container { background: var(--bg); border: 1px solid var(--border); padding: 32px; }
+  .chart-title { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .chart-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--light); margin-bottom: 28px; }
+
+  .hbar-group { margin-bottom: 20px; }
+  .hbar-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+  .hbar-tracks { display: flex; flex-direction: column; gap: 4px; }
+  .hbar-row { display: flex; align-items: center; gap: 10px; }
+  .hbar-track { flex: 1; height: 32px; background: var(--bg2); position: relative; }
+  .hbar-fill { height: 100%; display: flex; align-items: center; padding-left: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; transition: width 1s ease; position: relative; }
+  .hbar-fill.h { background: var(--human); color: white; }
+  .hbar-fill.r { background: var(--robot); color: white; }
+  .hbar-tag { width: 48px; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); flex-shrink: 0; }
+
+  .ueq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .ueq-label { font-size: 12px; color: var(--text); font-weight: 500; margin-bottom: 8px; }
+  .ueq-bars { display: flex; flex-direction: column; gap: 4px; }
+  .ueq-bar-row { display: flex; align-items: center; gap: 8px; }
+  .ueq-bar-track { flex: 1; height: 18px; background: var(--bg2); position: relative; }
+  .ueq-bar-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+  .ueq-bar-lbl { width: 38px; font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--muted); flex-shrink: 0; }
+
+  .dot-chart { position: relative; padding: 20px 0; }
+  .dot-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .dot-label { width: 180px; font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; text-align: right; flex-shrink: 0; }
+  .dot-track { flex: 1; height: 4px; background: var(--bg2); position: relative; }
+  .dot-h { position: absolute; top: -6px; width: 14px; height: 14px; border-radius: 50%; background: var(--human); border: 2px solid white; box-shadow: 0 0 0 1px var(--human); transform: translateX(-50%); }
+  .dot-r { position: absolute; top: -6px; width: 14px; height: 14px; border-radius: 50%; background: var(--robot); border: 2px solid white; box-shadow: 0 0 0 1px var(--robot); transform: translateX(-50%); }
+  .dot-legend { display: flex; gap: 24px; margin-top: 16px; }
+  .dl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .dl-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+  .ptable { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ptable th { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 10px 14px; border-bottom: 2px solid var(--text); text-align: left; }
+  .ptable td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .ptable tr:hover td { background: var(--bg2); }
+  .ptable tr.light-row td { background: rgba(27,79,216,0.03); }
+  .ptable tr.dark-row td { background: rgba(214,59,15,0.03); }
+  .version-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 2px; }
+  .vb-light { background: var(--human-light); color: var(--human); border: 1px solid rgba(27,79,216,0.2); }
+  .vb-dark { background: var(--robot-light); color: var(--robot); border: 1px solid rgba(214,59,15,0.2); }
+
+  .hmt-chart { position: relative; }
+  .hmt-row { display: flex; align-items: center; margin-bottom: 12px; }
+  .hmt-dim { width: 200px; font-size: 12px; color: var(--text); font-weight: 500; flex-shrink: 0; }
+  .hmt-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .hmt-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .hmt-track { flex: 1; height: 22px; background: var(--bg2); position: relative; }
+  .hmt-fill { height: 100%; display: flex; align-items: center; padding: 0 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; }
+  .hmt-fill.h { background: var(--human); color: white; }
+  .hmt-fill.r { background: var(--robot); color: white; }
+  .hmt-scale { width: 32px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--light); flex-shrink: 0; }
+
+  .methodology-flow { display: grid; grid-template-columns: repeat(5, 1fr); position: relative; }
+  .methodology-flow::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px; background: var(--border2); z-index: 0; }
+  .mf-step { text-align: center; padding: 0 12px; position: relative; z-index: 1; }
+  .mf-dot { width: 20px; height: 20px; border-radius: 50%; margin: 18px auto 16px; border: 2px solid var(--bg); }
+  .mf-dot.h { background: var(--human); }
+  .mf-dot.r { background: var(--robot); }
+  .mf-dot.m { background: var(--gold); }
+  .mf-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.5px; }
+  .mf-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  .ia-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ia-table th { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 14px; border-bottom: 2px solid var(--text); background: var(--bg2); color: var(--muted); text-align: center; }
+  .ia-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: center; }
+  .ia-table td:first-child { text-align: left; font-weight: 500; }
+  .cap-g { background: rgba(27,150,50,0.1); color: #1a7a1a; border: 1px solid rgba(27,150,50,0.25); border-radius: 3px; padding: 2px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; display: inline-block; }
+  .cap-y { background: rgba(200,134,11,0.1); color: var(--gold); border: 1px solid rgba(200,134,11,0.25); border-radius: 3px; padding: 2px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; display: inline-block; }
+  .cap-r { background: rgba(214,59,15,0.08); color: var(--robot); border: 1px solid rgba(214,59,15,0.2); border-radius: 3px; padding: 2px 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; display: inline-block; }
+  .ia-wrap { border: 1px solid var(--border); overflow: hidden; }
+
+  .hyp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+  .hyp-card { border: 1px solid var(--border); padding: 24px; position: relative; }
+  .hyp-num { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 48px; color: var(--bg3); position: absolute; top: 16px; right: 20px; line-height: 1; }
+  .hyp-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+  .hyp-label.supported { color: #1a7a1a; }
+  .hyp-label.partial { color: var(--gold); }
+  .hyp-label.mixed { color: var(--human); }
+  .hyp-text { font-size: 14px; color: var(--muted); line-height: 1.65; }
+  .hyp-result { margin-top: 12px; font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 2px; }
+  .hr-supported { background: rgba(27,150,50,0.07); color: #1a7a1a; border-left: 3px solid #1a7a1a; }
+  .hr-partial { background: rgba(200,134,11,0.07); color: var(--gold); border-left: 3px solid var(--gold); }
+
+  .version-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; border: 2px solid var(--text); }
+  .vc-side { padding: 32px; }
+  .vc-side.light { border-right: 1px solid var(--border); }
+  .vc-center { display: flex; align-items: center; justify-content: center; width: 60px; background: var(--bg2); border-left: 1px solid var(--border); border-right: 1px solid var(--border); writing-mode: vertical-rl; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--light); }
+  .vc-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .vc-label.hl { color: var(--human); } .vc-label.hr { color: var(--robot); }
+  .vc-stat { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--bg2); }
+  .vc-stat-label { font-size: 13px; color: var(--muted); }
+  .vc-stat-val { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 18px; }
+  .vc-stat-val.h { color: var(--human); } .vc-stat-val.r { color: var(--robot); }
+
+  .pq { border-top: 2px solid var(--text); border-bottom: 2px solid var(--text); padding: 40px 0; margin: 48px 0; }
+  .pq p { font-family: 'Inter', system-ui, sans-serif; font-style: italic; font-size: 22px; line-height: 1.5; color: var(--text); max-width: 800px; }
+  .pq cite { display: block; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--light); margin-top: 16px; font-style: normal; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--bg2); border: 1px solid var(--border); padding: 4px 10px; color: var(--muted); }
+
+  .contrib { border-left: 3px solid var(--human); padding: 20px 24px; background: var(--human-light); margin-bottom: 12px; }
+  .contrib h4 { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .contrib p { font-size: 14px; color: var(--muted); }
+
+  footer { background: var(--text); color: rgba(255,255,255,0.5); padding: 48px 0; border-top: 2px solid var(--text); font-family: 'JetBrains Mono', monospace; font-size: 12px; text-align: center; }
+  footer strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+  footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+
+  .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 6px; }
+
+  @media (max-width: 768px) {
+    .hero-top, .g2, .g3, .g4, .robot-grid, .version-compare, .ueq-grid { grid-template-columns: 1fr; }
+    .hero-left { border-right: none; padding: 40px 0; }
+    .hero-right { padding: 0 0 40px; }
+    .hero-stats { grid-template-columns: repeat(3, 1fr); }
+    .methodology-flow { grid-template-columns: 1fr; }
+    .methodology-flow::before { display: none; }
+    .loa-item { grid-template-columns: 1fr; }
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .hero > * { animation: fadeIn 0.6s ease both; }
+  .hero > *:nth-child(2) { animation-delay: 0.15s; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-left">
+      <div class="nav-vol">MSc / 2024 / HRI</div>
+      <div class="nav-title">Human-Robot Teaming</div>
+    </div>
+    <div class="nav-right">University of Birmingham · Computer Science</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-top">
+      <div class="hero-left">
+        <div class="hero-kicker">MSc Research Case Study · Coactive Design · HCI</div>
+        <h1>Human-Robot Teaming in <em>Collaborative</em> Game Environments</h1>
+        <p class="hero-desc">A mixed-methods investigation into how humans and autonomous robot agents build shared mental models, trust, and interdependence during real-time collaborative gameplay using Coactive Design as the theoretical and methodological framework.</p>
+      </div>
+      <div class="hero-right">
+        <div class="hero-meta-grid">
+          <div class="hero-meta-item">
+            <div class="hmi-label">Institution</div>
+            <div class="hmi-val">University of Birmingham</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hmi-label">Degree</div>
+            <div class="hmi-val">MSc Computer Science</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hmi-label">Framework</div>
+            <div class="hmi-val">Coactive Design (CoAD)</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hmi-label">Methods</div>
+            <div class="hmi-val">Mixed Methods</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hmi-label">Tools</div>
+            <div class="hmi-val">UEQ · SUS · NASA-TLX</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hmi-label">UI Prototyping</div>
+            <div class="hmi-val">Figma (UCD Process)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hs-item">
+        <div class="hs-val h">35</div>
+        <div class="hs-lbl">Total participants</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-val">5</div>
+        <div class="hs-lbl">Automation versions</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-val r">+69%</div>
+        <div class="hs-lbl">Comms increase (dark)</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-val h">3</div>
+        <div class="hs-lbl">Robot teammates</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-val">4</div>
+        <div class="hs-lbl">Validated instruments</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">01</span>
+      <h2>Research Overview</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="section-lead">This project explored the dynamics of human-robot collaboration through a game-based research environment combining Coactive Design theory, controlled experimentation, and user-centred interface redesign to answer three core research questions about human-machine teaming.</p>
+    <div class="g3" style="margin-bottom:40px;">
+      <div class="cell">
+        <div class="cell-icon">❓</div>
+        <h3>RQ1 - Teaming Dynamics</h3>
+        <p>To what extent do human-machine teaming dynamics in the game influence teamwork, user experience, and usability?</p>
+      </div>
+      <div class="cell">
+        <div class="cell-icon">⚙️</div>
+        <h3>RQ2 - CoAD Methods</h3>
+        <p>How can different Coactive Design methods impact human-machine teaming dynamics, and what happens when Standard vs. Modified CoAD are compared?</p>
+      </div>
+      <div class="cell">
+        <div class="cell-icon">🖥️</div>
+        <h3>RQ3 - UI Redesign</h3>
+        <p>How can the game's user interface be redesigned using UCD principles to optimise usability and enhance overall player experience?</p>
+      </div>
+    </div>
+
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:40px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:28px;">Research Methodology Pipeline</div>
+      <div class="methodology-flow">
+        <div class="mf-step">
+          <div class="mf-dot h"></div>
+          <div class="mf-label">Literature</div>
+          <div class="mf-desc">HRI, CoAD, HMT, game UI design synthesis</div>
+        </div>
+        <div class="mf-step">
+          <div class="mf-dot h"></div>
+          <div class="mf-label">CoAD Design</div>
+          <div class="mf-desc">Standard + Modified methods applied to 5 automation versions</div>
+        </div>
+        <div class="mf-step">
+          <div class="mf-dot m"></div>
+          <div class="mf-label">UI Redesign</div>
+          <div class="mf-desc">UCD process: wireframing → Figma prototype → heuristic eval</div>
+        </div>
+        <div class="mf-step">
+          <div class="mf-dot r"></div>
+          <div class="mf-label">Experiment</div>
+          <div class="mf-desc">Controlled sessions: Light vs. Dark, n=35 across 2 studies</div>
+        </div>
+        <div class="mf-step">
+          <div class="mf-dot r"></div>
+          <div class="mf-label">Analysis</div>
+          <div class="mf-desc">Quant + qual: UEQ, SUS, NASA-TLX, HMT questionnaire, interviews</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">02</span>
+      <h2>The Game Environment</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="section-lead">The research environment was a real-time collaborative game where one human player commands three specialised robot teammates. The design made role interdependence structurally unavoidable; no single agent could complete all objectives alone.</p>
+
+    <div class="robot-grid" style="margin-bottom:32px;">
+      <div class="robot-card">
+        <div class="robot-dot blue">🤖</div>
+        <div class="robot-name blue">Blue Robot</div>
+        <div class="robot-spec">Specialises in combat and resource collection. The primary offensive agent essential for any task involving threats.</div>
+        <div class="robot-cap">Capabilities</div>
+        <span class="ability-tag">Eliminate lions</span>
+        <span class="ability-tag">Collect bullets</span>
+        <span class="ability-tag">Autonomous bones</span>
+      </div>
+      <div class="robot-card">
+        <div class="robot-dot red">🦾</div>
+        <div class="robot-name red">Red Robot</div>
+        <div class="robot-spec">Focuses on environmental manipulation. Required for destructive environmental control and collaborative resource gathering.</div>
+        <div class="robot-cap">Capabilities</div>
+        <span class="ability-tag">Destroy walls</span>
+        <span class="ability-tag">Collect bullets</span>
+        <span class="ability-tag">Autonomous bones</span>
+      </div>
+      <div class="robot-card">
+        <div class="robot-dot pink">🛡️</div>
+        <div class="robot-name pink">Pink Robot</div>
+        <div class="robot-spec">Provides defensive and construction capabilities. The only agent capable of creating walls and new ground critical for trapping strategies.</div>
+        <div class="robot-cap">Capabilities</div>
+        <span class="ability-tag">Create walls</span>
+        <span class="ability-tag">Create ground</span>
+        <span class="ability-tag">Collect bullets</span>
+      </div>
+    </div>
+
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px;">Experimental Conditions</div>
+    <div class="version-compare">
+      <div class="vc-side light">
+        <div class="vc-label hl">◉ Light Version</div>
+        <div class="vc-stat"><span class="vc-stat-label">Visibility</span><span class="vc-stat-val h">Full map</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">Avg play time</span><span class="vc-stat-val h">3m 26s</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">Avg score</span><span class="vc-stat-val h">66.3 pts</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">Avg messages</span><span class="vc-stat-val h">18.6</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">SUS score</span><span class="vc-stat-val h">70.83</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">NASA-TLX mean</span><span class="vc-stat-val h">29.33</span></div>
+      </div>
+      <div class="vc-center">vs</div>
+      <div class="vc-side">
+        <div class="vc-label hr">◉ Dark Version</div>
+        <div class="vc-stat"><span class="vc-stat-label">Visibility</span><span class="vc-stat-val r">Limited radius</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">Avg play time</span><span class="vc-stat-val r">1m 33s</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">Avg score</span><span class="vc-stat-val r">57.0 pts</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">Avg messages</span><span class="vc-stat-val r">13.8</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">SUS score</span><span class="vc-stat-val r">62.08</span></div>
+        <div class="vc-stat"><span class="vc-stat-label">NASA-TLX mean</span><span class="vc-stat-val r">42.67</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">03</span>
+      <h2>Coactive Design Framework</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="section-lead">Both Standard and Modified Coactive Design methods were applied systematically to define team interdependence, allocate roles across five automation levels, and surface the information requirements each agent needed to operate effectively.</p>
+
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px;">Interdependence Analysis (IA) Table</div>
+    <div class="ia-wrap" style="margin-bottom:32px;">
+      <table class="ia-table">
+        <thead>
+          <tr><th style="text-align:left;">Task</th><th>Human</th><th>Blue Robot</th><th>Red Robot</th><th>Pink Robot</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Kill lions</td><td><span class="cap-y">assisted</span></td><td><span class="cap-g">independent</span></td><td><span class="cap-r">cannot</span></td><td><span class="cap-r">cannot</span></td></tr>
+          <tr><td>Destroy walls</td><td><span class="cap-y">assisted</span></td><td><span class="cap-r">cannot</span></td><td><span class="cap-g">independent</span></td><td><span class="cap-r">cannot</span></td></tr>
+          <tr><td>Create walls</td><td><span class="cap-y">assisted</span></td><td><span class="cap-r">cannot</span></td><td><span class="cap-r">cannot</span></td><td><span class="cap-g">independent</span></td></tr>
+          <tr><td>Collect collaborative coins</td><td><span class="cap-g">independent</span></td><td><span class="cap-y">assisted</span></td><td><span class="cap-y">assisted</span></td><td><span class="cap-y">assisted</span></td></tr>
+          <tr><td>Collect individual coins</td><td><span class="cap-r">cannot</span></td><td><span class="cap-g">independent</span></td><td><span class="cap-g">independent</span></td><td><span class="cap-g">independent</span></td></tr>
+          <tr><td>Position robots</td><td><span class="cap-g">independent</span></td><td><span class="cap-y">assisted</span></td><td><span class="cap-y">assisted</span></td><td><span class="cap-y">assisted</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex; gap:16px; margin-bottom:40px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted);"><span class="cap-g" style="display:inline-block;">independent</span> Can perform task alone</div>
+      <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted);"><span class="cap-y" style="display:inline-block;">assisted</span> Can perform with support</div>
+      <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted);"><span class="cap-r" style="display:inline-block;">cannot</span> Unable to perform task</div>
+    </div>
+
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px;">Five Levels of Automation — Designed & Compared</div>
+    <div class="loa-list">
+      <div class="loa-item"><div class="loa-num"><span>V1</span></div><div class="loa-body"><div class="loa-title">Basic Command-Based Interaction</div><div class="loa-desc">Human directs all robot actions explicitly. Robots only execute commands and autonomously collect individual coins.</div></div><div class="loa-meta"><div class="loa-score">Human score: 15 · Robot scores: 5 each</div><div style="display:flex; align-items:center; gap:8px; width:100%"><div class="loa-bar-wrap"><div class="loa-bar" style="width:30%; background:var(--human);"></div></div><span style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--muted);">Low autonomy</span></div></div></div>
+      <div class="loa-item"><div class="loa-num"><span>V2</span></div><div class="loa-body"><div class="loa-title">Task-Aware Robots</div><div class="loa-desc">Robots identify nearby tasks and suggest actions, but humans must approve each one. Two-way information flow introduced.</div></div><div class="loa-meta"><div class="loa-score">Human score: 15 · Robot scores: 6 each</div><div style="display:flex; align-items:center; gap:8px; width:100%"><div class="loa-bar-wrap"><div class="loa-bar" style="width:48%; background:var(--human);"></div></div><span style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--muted);">Suggestive</span></div></div></div>
+      <div class="loa-item" style="background:rgba(27,79,216,0.02);"><div class="loa-num"><span>V3</span></div><div class="loa-body"><div class="loa-title">Semi-Autonomous Task Execution ★ Optimal</div><div class="loa-desc">Robots execute specialised tasks autonomously when in range. Humans focus on strategy and positioning. Aligns with Onnasch et al.'s meta-analysis findings.</div></div><div class="loa-meta"><div class="loa-score">Human score: 18 · Robot scores: 10 each</div><div style="display:flex; align-items:center; gap:8px; width:100%"><div class="loa-bar-wrap"><div class="loa-bar" style="width:66%; background:var(--human);"></div></div><span style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--human);">Best balance</span></div></div></div>
+      <div class="loa-item"><div class="loa-num"><span>V4</span></div><div class="loa-body"><div class="loa-title">Adaptive Behaviour & Team Coordination</div><div class="loa-desc">Robots learn from player decisions, coordinate with each other. Humans set high-level objectives only. Complex multi-directional information flow.</div></div><div class="loa-meta"><div class="loa-score">Human score: 21 · Robot scores: 15 each</div><div style="display:flex; align-items:center; gap:8px; width:100%"><div class="loa-bar-wrap"><div class="loa-bar" style="width:80%; background:var(--robot); opacity:0.8;"></div></div><span style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--muted);">High autonomy</span></div></div></div>
+      <div class="loa-item"><div class="loa-num"><span>V5</span></div><div class="loa-body"><div class="loa-title">Dynamic Role Adaptation + AI Wizard</div><div class="loa-desc">Player dynamically adjusts autonomy per robot. AI Wizard recommends optimal deployment. Fully adaptive information presentation.</div></div><div class="loa-meta"><div class="loa-score">Human: 24 · Robots: 16 · Wizard: 4</div><div style="display:flex; align-items:center; gap:8px; width:100%"><div class="loa-bar-wrap"><div class="loa-bar" style="width:95%; background:var(--robot);"></div></div><span style="font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--muted);">Full adaptive</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">04</span>
+      <h2>Experimental Results</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="section-lead">Data from two experimental runs (n=12 and n=23) were analysed across four pre-registered hypotheses using a combination of gameplay logs, validated questionnaires, and semi-structured interviews.</p>
+
+    <div class="hyp-grid" style="margin-bottom:48px;">
+      <div class="hyp-card"><div class="hyp-num">H1</div><div class="hyp-label supported">✓ Supported</div><div class="hyp-text">The dark version will result in higher message frequency between the player and robots.</div><div class="hyp-result hr-supported">Dark: 66 msgs vs Light: 39 msgs — 69% increase confirmed</div></div>
+      <div class="hyp-card"><div class="hyp-num">H2</div><div class="hyp-label supported">✓ Supported</div><div class="hyp-text">The dark version will show lower scores than the light version.</div><div class="hyp-result hr-supported">Avg scores: Light 305 vs Dark 239, 21.6% decrease confirmed</div></div>
+      <div class="hyp-card"><div class="hyp-num">H3</div><div class="hyp-label partial">◑ Partial</div><div class="hyp-text">Dark version will require greater AI reliance and stronger perceived teamwork/interdependence.</div><div class="hyp-result hr-partial">Higher help/dependence, but lower companionship and teamwork scores</div></div>
+      <div class="hyp-card"><div class="hyp-num">H4</div><div class="hyp-label partial">◑ Partial</div><div class="hyp-text">Dark SUS scores lower; dark UEQ scores higher (more engaging despite being harder).</div><div class="hyp-result hr-partial">SUS confirmed (62.08 vs 70.83); UEQ mixed - hedonic higher but pragmatic lower</div></div>
+    </div>
+
+    <div class="g2" style="margin-bottom:24px;">
+      <div class="chart-container">
+        <div class="chart-title">Message Frequency - Player ↔ Robot</div>
+        <div class="chart-sub">Average messages per game session · Study 1 (n=12)</div>
+        <div class="hbar-group">
+          <div class="hbar-label">Light Version (n=6)</div>
+          <div class="hbar-row"><div class="hbar-track" style="flex:1;"><div class="hbar-fill h" style="width:59.1%;">39 messages</div></div></div>
+        </div>
+        <div class="hbar-group">
+          <div class="hbar-label">Dark Version (n=6)</div>
+          <div class="hbar-row"><div class="hbar-track" style="flex:1;"><div class="hbar-fill r" style="width:100%;">66 messages</div></div></div>
+        </div>
+        <div style="margin-top:16px; padding:12px 16px; background:var(--bg2); border-left:3px solid var(--robot); font-size:13px; color:var(--muted);">Limited visibility forced players to use their robot teammates as information proxies, actively querying their positions and environmental status.</div>
+      </div>
+      <div class="chart-container">
+        <div class="chart-title">Average Game Scores</div>
+        <div class="chart-sub">Cumulative score per participant (avg) · Study 1</div>
+        <div class="hbar-group">
+          <div class="hbar-label">Light Version</div>
+          <div class="hbar-row"><div class="hbar-track" style="flex:1;"><div class="hbar-fill h" style="width:100%;">305 pts avg</div></div></div>
+        </div>
+        <div class="hbar-group">
+          <div class="hbar-label">Dark Version</div>
+          <div class="hbar-row"><div class="hbar-track" style="flex:1;"><div class="hbar-fill r" style="width:78.4%;">239 pts avg</div></div></div>
+        </div>
+        <div style="margin-top:16px; padding:12px 16px; background:var(--bg2); border-left:3px solid var(--human); font-size:13px; color:var(--muted);">More communication did not translate to better performance; knowledge about the environment remained the primary performance driver.</div>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-bottom:24px;">
+      <div class="chart-container">
+        <div class="chart-title">System Usability Scale (SUS)</div>
+        <div class="chart-sub">Average SUS score · Benchmark = 68 (acceptable)</div>
+        <div style="display:flex; align-items:flex-end; gap:32px; height:120px; padding-top:20px;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex:1;"><div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; color:var(--human);">70.83</div><div style="width:100%; background:var(--human); height:80px; display:flex; align-items:center; justify-content:center;"><span style="color:white; font-family:'JetBrains Mono',monospace; font-size:11px;">above benchmark</span></div><div style="font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Light</div></div>
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:8px; flex:1;"><div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; color:var(--robot);">62.08</div><div style="width:100%; background:var(--robot); height:59px; display:flex; align-items:center; justify-content:center;"><span style="color:white; font-family:'JetBrains Mono',monospace; font-size:11px;">below benchmark</span></div><div style="font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Dark</div></div>
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:8px; flex:0.6;"><div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted);">68</div><div style="width:2px; background:var(--border2); height:68px;"></div><div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace; writing-mode:vertical-rl; transform:rotate(180deg);">benchmark</div></div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <div class="chart-title">NASA Task Load Index (TLX)</div>
+        <div class="chart-sub">Perceived cognitive workload (0-100) · Study 1</div>
+        <div style="display:flex; align-items:flex-end; gap:32px; height:120px; padding-top:20px;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex:1;"><div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; color:var(--human);">29.33</div><div style="width:100%; background:var(--human); height:35px; display:flex; align-items:center; justify-content:center;"><span style="color:white; font-family:'JetBrains Mono',monospace; font-size:11px;">moderate</span></div><div style="font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Light</div></div>
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:8px; flex:1;"><div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; color:var(--robot);">42.67</div><div style="width:100%; background:var(--robot); height:51px; display:flex; align-items:center; justify-content:center;"><span style="color:white; font-family:'JetBrains Mono',monospace; font-size:11px;">high</span></div><div style="font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Dark</div></div>
+        </div>
+        <div style="margin-top:12px; font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace;">+13.34 pts · 45.5% higher workload in dark condition</div>
+      </div>
+    </div>
+
+    <div class="chart-container" style="margin-bottom:24px;">
+      <div class="chart-title">User Experience Questionnaire (UEQ) - Scale Comparison</div>
+      <div class="chart-sub">Short UEQ scales (-3 to +3) · Blue = Light, Red = Dark</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; margin-top:8px;">
+        <div><div style="font-size:12px; font-weight:600; margin-bottom:12px; text-align:center;">Pragmatic Quality</div><div style="text-align:center; font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:8px;">efficiency · dependability · ease of use</div><div style="display:flex; justify-content:center; gap:20px; align-items:flex-end; height:80px;"><div style="display:flex; flex-direction:column; align-items:center; gap:6px;"><div style="font-size:11px; color:var(--human); font-weight:600; font-family:'JetBrains Mono',monospace;">1.167</div><div style="width:36px; background:var(--human); height:60px;"></div><div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Light</div></div><div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px;"><div style="font-size:11px; color:var(--robot); font-weight:600; font-family:'JetBrains Mono',monospace;">0.917</div><div style="width:36px; background:var(--robot); height:47px;"></div><div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Dark</div></div></div></div>
+        <div><div style="font-size:12px; font-weight:600; margin-bottom:12px; text-align:center;">Hedonic Quality</div><div style="text-align:center; font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:8px;">stimulation · novelty · inventiveness</div><div style="display:flex; justify-content:center; gap:20px; align-items:flex-end; height:80px;"><div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px;"><div style="font-size:11px; color:var(--muted); font-weight:600; font-family:'JetBrains Mono',monospace;">-0.375</div><div style="width:36px; background:var(--border2); height:10px;"></div><div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Light</div></div><div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px;"><div style="font-size:11px; color:var(--robot); font-weight:600; font-family:'JetBrains Mono',monospace;">+0.250</div><div style="width:36px; background:var(--robot); height:16px;"></div><div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Dark</div></div></div></div>
+        <div><div style="font-size:12px; font-weight:600; margin-bottom:12px; text-align:center;">Overall Impression</div><div style="text-align:center; font-size:11px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:8px;">combined pragmatic + hedonic</div><div style="display:flex; justify-content:center; gap:20px; align-items:flex-end; height:80px;"><div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px;"><div style="font-size:11px; color:var(--human); font-weight:600; font-family:'JetBrains Mono',monospace;">0.396</div><div style="width:36px; background:var(--human); height:26px;"></div><div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Light</div></div><div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:6px;"><div style="font-size:11px; color:var(--robot); font-weight:600; font-family:'JetBrains Mono',monospace;">0.583</div><div style="width:36px; background:var(--robot); height:38px;"></div><div style="font-size:10px; color:var(--muted); font-family:'JetBrains Mono',monospace;">Dark</div></div></div></div>
+      </div>
+      <div style="margin-top:20px; padding:12px 16px; background:var(--bg2); font-size:13px; color:var(--muted); border-left:3px solid var(--gold);"><strong style="color:var(--text);">Key finding:</strong> Despite lower usability, the dark version scored higher on Overall Impression, suggesting challenge and atmosphere compensated for friction in the subjective experience.</div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">Human-Machine Teaming (HMT) Questionnaire - Dimension Scores</div>
+      <div class="chart-sub">7-point Likert scale · <span style="color:var(--human);">■ Light Version</span> &nbsp; <span style="color:var(--robot);">■ Dark Version</span></div>
+      <div style="margin-top:16px;">
+        <div class="hmt-row"><div class="hmt-dim">Companionship</div><div class="hmt-bars"><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill h" style="width:88.6%;">6.2</div></div><div class="hmt-scale">/7</div></div><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill r" style="width:75.7%;">5.3</div></div><div class="hmt-scale">/7</div></div></div></div>
+        <div class="hmt-row"><div class="hmt-dim">Role Competence</div><div class="hmt-bars"><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill h" style="width:78.6%;">5.5</div></div><div class="hmt-scale">/7</div></div><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill r" style="width:67.1%;">4.7</div></div><div class="hmt-scale">/7</div></div></div></div>
+        <div class="hmt-row"><div class="hmt-dim">Good Teamwork</div><div class="hmt-bars"><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill h" style="width:71.4%;">5.0</div></div><div class="hmt-scale">/7</div></div><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill r" style="width:64.3%;">4.5</div></div><div class="hmt-scale">/7</div></div></div></div>
+        <div class="hmt-row"><div class="hmt-dim">Shared Goals</div><div class="hmt-bars"><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill h" style="width:71.4%;">5.0</div></div><div class="hmt-scale">/7</div></div><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill r" style="width:68.6%;">4.8</div></div><div class="hmt-scale">/7</div></div></div></div>
+        <div class="hmt-row" style="border-top:1px solid var(--border); padding-top:12px; margin-top:4px;"><div class="hmt-dim" style="color:var(--robot);">Help (dark higher)</div><div class="hmt-bars"><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill h" style="width:60%;">4.2</div></div><div class="hmt-scale">/7</div></div><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill r" style="width:67.1%;">4.7</div></div><div class="hmt-scale">/7</div></div></div></div>
+        <div class="hmt-row"><div class="hmt-dim" style="color:var(--robot);">Dependence (dark higher)</div><div class="hmt-bars"><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill h" style="width:50%;">3.5</div></div><div class="hmt-scale">/7</div></div><div class="hmt-bar-wrap"><div class="hmt-track"><div class="hmt-fill r" style="width:64.3%;">4.5</div></div><div class="hmt-scale">/7</div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">05</span>
+      <h2>UI Redesign - UCD Process</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="section-lead">A user-centred design process was applied to the existing game interface, moving from pain-point identification through Figma wireframing and prototyping to a redesigned interface validated against Nielsen's heuristics.</p>
+
+    <div class="g2" style="margin-bottom:32px;">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--robot); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--border);">✗ Existing UI - Pain Points Identified</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--robot-light); border-left:3px solid var(--robot);"><span style="color:var(--robot); font-weight:700; flex-shrink:0;">1</span><span>~⅓ of screen occupied by unused black area - major viewport waste</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--robot-light); border-left:3px solid var(--robot);"><span style="color:var(--robot); font-weight:700; flex-shrink:0;">2</span><span>Incorrect robot names displayed in UI - Blue Robot labelled as Red</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--robot-light); border-left:3px solid var(--robot);"><span style="color:var(--robot); font-weight:700; flex-shrink:0;">3</span><span>Suboptimal minimap and button placement - hindered quick scanning</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--robot-light); border-left:3px solid var(--robot);"><span style="color:var(--robot); font-weight:700; flex-shrink:0;">4</span><span>Large text-label buttons consumed critical game viewport space</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--robot-light); border-left:3px solid var(--robot);"><span style="color:var(--robot); font-weight:700; flex-shrink:0;">5</span><span>No semi-transparency - buttons fully obscured game content beneath</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--human); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--border);">✓ Redesigned UI - Improvements Delivered</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--human-light); border-left:3px solid var(--human);"><span style="color:var(--human); font-weight:700; flex-shrink:0;">1</span><span>Full-screen game viewport - black area eliminated entirely</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--human-light); border-left:3px solid var(--human);"><span style="color:var(--human); font-weight:700; flex-shrink:0;">2</span><span>Icon-based semi-transparent buttons - minimal footprint, max visibility</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--human-light); border-left:3px solid var(--human);"><span style="color:var(--human); font-weight:700; flex-shrink:0;">3</span><span>Consistent colour-coding per robot - blue/red/pink always distinct</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--human-light); border-left:3px solid var(--human);"><span style="color:var(--human); font-weight:700; flex-shrink:0;">4</span><span>Minimap relocated to top-right - glanceable situational awareness</span></div>
+          <div style="display:flex; gap:12px; align-items:flex-start; font-size:14px; padding:12px; background:var(--human-light); border-left:3px solid var(--human);"><span style="color:var(--human); font-weight:700; flex-shrink:0;">5</span><span>Scores prominently displayed at top - team performance always visible</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg2); border:1px solid var(--border); padding:28px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px;">UI Design Heuristics Applied</div>
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:16px;">
+        <div style="text-align:center;"><div style="font-size:20px; margin-bottom:8px;">🔄</div><div style="font-size:12px; font-weight:600; margin-bottom:4px;">Consistency</div><div style="font-size:11px; color:var(--muted);">Uniform patterns across all robot controls</div></div>
+        <div style="text-align:center;"><div style="font-size:20px; margin-bottom:8px;">👁️</div><div style="font-size:12px; font-weight:600; margin-bottom:4px;">Visibility</div><div style="font-size:11px; color:var(--muted);">Critical info accessible without search</div></div>
+        <div style="text-align:center;"><div style="font-size:20px; margin-bottom:8px;">💬</div><div style="font-size:12px; font-weight:600; margin-bottom:4px;">Feedback</div><div style="font-size:11px; color:var(--muted);">Status bar shows robot task completion</div></div>
+        <div style="text-align:center;"><div style="font-size:20px; margin-bottom:8px;">⚡</div><div style="font-size:12px; font-weight:600; margin-bottom:4px;">Efficiency</div><div style="font-size:11px; color:var(--muted);">Controls grouped near score for quick decisions</div></div>
+        <div style="text-align:center;"><div style="font-size:20px; margin-bottom:8px;">🎯</div><div style="font-size:12px; font-weight:600; margin-bottom:4px;">Minimalism</div><div style="font-size:11px; color:var(--muted);">Semi-transparent overlays, no clutter</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">06</span>
+      <h2>Participant Level Data - Study 1</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <p class="section-lead">Individual performance and communication data from all 12 participants in Study 1 show considerable intra-group variance that underscores the importance of individual differences in HRI research.</p>
+
+    <div class="ia-wrap">
+      <table class="ptable">
+        <thead><tr><th>Participant</th><th>Version</th><th>Avg Score</th><th>Avg Messages</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr class="light-row"><td>P01</td><td><span class="version-badge vb-light">Light</span></td><td>69</td><td>1</td><td style="font-size:12px; color:var(--muted);">High score, minimal comms</td></tr>
+          <tr class="light-row"><td>P02</td><td><span class="version-badge vb-light">Light</span></td><td>10</td><td>0</td><td style="font-size:12px; color:var(--muted);">Low engagement outlier</td></tr>
+          <tr class="light-row"><td>P03</td><td><span class="version-badge vb-light">Light</span></td><td>52</td><td>0</td><td style="font-size:12px; color:var(--muted);">Independent play style</td></tr>
+          <tr class="light-row"><td>P04</td><td><span class="version-badge vb-light">Light</span></td><td>66</td><td>29</td><td style="font-size:12px; color:var(--muted);">High comms + high score</td></tr>
+          <tr class="light-row"><td>P05</td><td><span class="version-badge vb-light">Light</span></td><td>38</td><td>6</td><td style="font-size:12px; color:var(--muted);">Moderate on both</td></tr>
+          <tr class="light-row"><td>P06</td><td><span class="version-badge vb-light">Light</span></td><td>70</td><td>3</td><td style="font-size:12px; color:var(--muted);">Highest score, low comms</td></tr>
+          <tr style="border-top:2px solid var(--border2);"><td colspan="5" style="background:var(--bg2); font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); padding:8px 14px; letter-spacing:1px;">LIGHT TOTAL: 305 pts · 39 messages</td></tr>
+          <tr class="dark-row"><td>P07</td><td><span class="version-badge vb-dark">Dark</span></td><td>58</td><td>13</td><td style="font-size:12px; color:var(--muted);">Above dark average</td></tr>
+          <tr class="dark-row"><td>P08</td><td><span class="version-badge vb-dark">Dark</span></td><td>21</td><td>5</td><td style="font-size:12px; color:var(--muted);">Below average, few comms</td></tr>
+          <tr class="dark-row"><td>P09</td><td><span class="version-badge vb-dark">Dark</span></td><td>35</td><td>5</td><td style="font-size:12px; color:var(--muted);">Moderate score and comms</td></tr>
+          <tr class="dark-row"><td>P10</td><td><span class="version-badge vb-dark">Dark</span></td><td>23</td><td>1</td><td style="font-size:12px; color:var(--muted);">Low comms despite dark mode</td></tr>
+          <tr class="dark-row"><td>P11</td><td><span class="version-badge vb-dark">Dark</span></td><td>83</td><td>41</td><td style="font-size:12px; color:var(--muted);">Highest dark score + comms</td></tr>
+          <tr class="dark-row"><td>P12</td><td><span class="version-badge vb-dark">Dark</span></td><td>19</td><td>1</td><td style="font-size:12px; color:var(--muted);">Minimal engagement</td></tr>
+          <tr style="border-top:2px solid var(--border2);"><td colspan="5" style="background:var(--bg2); font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); padding:8px 14px; letter-spacing:1px;">DARK TOTAL: 239 pts · 66 messages</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="pq">
+    <p>"More communication between human and robot did not produce better performance; it revealed that shared situational awareness, not message volume, is the critical variable in human-machine team effectiveness."</p>
+    <cite>- Key finding from qualitative analysis, corroborating Walliser et al. (2019) on team identity and structured roles</cite>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">07</span>
+      <h2>Novel Contributions</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="contrib"><h4>1 - Empirical Evidence for Visibility-Driven HMT Dynamics</h4><p>Systematic comparison of light and dark game versions produced empirical evidence for how environmental uncertainty modulates communication patterns, performance, and perceived interdependence in human-AI teams, extending prior CoAD literature into interactive environments.</p></div>
+    <div class="contrib"><h4>2 - Custom Human-Machine Teaming (HMT) Questionnaire</h4><p>Developed and validated a 10-item, 7-point Likert instrument measuring perceived collaboration, trust, and interdependence in human-AI teams. Adaptable for future HRI studies across domains beyond gaming.</p></div>
+    <div class="contrib"><h4>3 - Modified CoAD Method with Quantitative Scoring</h4><p>Extended the Standard Coactive Design method with a numerical scoring system, communication flow analysis, information requirements mapping, and explicit automation-level comparison, providing concrete tools that the standard method lacked.</p></div>
+    <div class="contrib"><h4>4 - UCD-Grounded Interface Redesign Model</h4><p>Demonstrated how established HCI principles (consistency, visibility, feedback, minimalism) can be systematically applied to collaborative AI game interfaces, producing a replicable redesign process for human-robot interaction systems.</p></div>
+
+    <div style="margin-top:40px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px;">Methods & Tools</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div><div style="font-size:12px; font-weight:600; margin-bottom:10px; color:var(--text);">Research Instruments</div><div class="tags"><span class="tag">UEQ (Short)</span><span class="tag">System Usability Scale</span><span class="tag">NASA-TLX</span><span class="tag">Custom HMT Questionnaire</span><span class="tag">Semi-structured interviews</span><span class="tag">Gameplay logging</span></div></div>
+        <div><div style="font-size:12px; font-weight:600; margin-bottom:10px; color:var(--text);">Design & Analysis</div><div class="tags"><span class="tag">Coactive Design (CoAD)</span><span class="tag">Cognitive Work Analysis</span><span class="tag">Figma prototyping</span><span class="tag">Wireframing</span><span class="tag">Descriptive statistics</span><span class="tag">Thematic analysis</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header">
+      <span class="sec-num">08</span>
+      <h2>Reflections & Future Directions</h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="g3">
+      <div class="cell"><div class="cell-icon">📡</div><h3>Communication ≠ Collaboration</h3><p>The dark version generated 69% more messages but worse team outcomes. The lesson: designing for communication quantity is a proxy metric, shared situational awareness is the actual target variable.</p></div>
+      <div class="cell"><div class="cell-icon">⚖️</div><h3>The Autonomy Trade-off</h3><p>Version 3 (semi-autonomous) consistently outperformed both fully manual and highly autonomous configurations, supporting the meta-analytic finding that mid-level automation preserves human engagement while leveraging robot capability.</p></div>
+      <div class="cell"><div class="cell-icon">🎮</div><h3>Challenge Can Enhance Experience</h3><p>Despite lower SUS scores, the dark version produced higher Overall UEQ ratings. Difficulty and friction are not inherently negative; they become negative only when they undermine agency rather than augmenting it.</p></div>
+    </div>
+
+    <div style="margin-top:32px; border:1px solid var(--border); padding:28px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:16px;">Future Research Directions Identified</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div style="font-size:14px; color:var(--muted); padding:12px; border-left:2px solid var(--border2);">Adaptive AI systems that personalise autonomy levels to individual cognitive profiles and skill levels in real-time</div>
+        <div style="font-size:14px; color:var(--muted); padding:12px; border-left:2px solid var(--border2);">Explainable AI interfaces that surface robot decision-making reasoning to build calibrated trust in teammates</div>
+        <div style="font-size:14px; color:var(--muted); padding:12px; border-left:2px solid var(--border2);">Larger sample studies (n>50) to achieve statistical power sufficient for ANOVA-based hypothesis testing across all HMT dimensions</div>
+        <div style="font-size:14px; color:var(--muted); padding:12px; border-left:2px solid var(--border2);">VR/AR-based HMT environments that enable physical-digital robot interaction extending Gerling et al.'s physical game UI findings</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Product Manager · <a href="mailto:khushalohlyan@gmail.com">khushalohlyan@gmail.com</a> · linkedin.com/in/khushalohlyan</p>
+    <p style="margin-top:8px; opacity:0.4;">MSc Research Case Study · Human-Robot Teaming · University of Birmingham · 2024</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)file:///C:/Users/khushal/Downloads/PrimeVault.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrimeVault – DeFi Portfolio Management Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link href="file:///C:/Users/khushal/Downloads/PrimeVault%20%E2%80%93%20DeFi%20Portfolio%20Management%20Case%20Study_files/css2" rel="stylesheet">
+  <style>
+    :root {
+      --cream:       #faf7f1;
+      --cream-dark:  #f0ece2;
+      --ink:         #1a1825;
+      --ink-mid:     #3d3a4f;
+      --ink-light:   #6b6880;
+      --ink-faint:   #a09db5;
+      --gold:        #b07d2a;
+      --gold-light:  #f5e9cc;
+      --gold-border: rgba(176,125,42,0.25);
+      --teal:        #1e6b5e;
+      --teal-light:  #d0ebe7;
+      --coral:       #c94c35;
+      --coral-light: #f7ddd8;
+      --steel:       #3a5f7a;
+      --steel-light: #dae8f3;
+      --border:      #e0dbd0;
+      --shadow:      rgba(26,24,37,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23grain)' opacity='0.028'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .page { max-width: 780px; margin: 0 auto; padding: 0 32px 120px; }
+
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; border-bottom: 2px solid var(--ink); margin-bottom: 0; }
+    .topbar-brand { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); font-weight: 500; }
+    .topbar-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-light); letter-spacing: 0.06em; }
+
+    .hero { padding: 72px 0 60px; border-bottom: 1px solid var(--border); position: relative; }
+    .hero-kicker { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .hero-kicker .line { flex: 1; height: 1px; background: var(--gold); }
+    .hero-kicker span { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+    .hero h1 { font-family: 'Inter', sans-serif; font-weight: 600; font-size: clamp(2.8rem, 6vw, 4.2rem); line-height: 1.08; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 8px; }
+    .hero h1 .accent { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 17px; color: var(--ink-mid); font-weight: 300; margin-top: 20px; max-width: 580px; line-height: 1.65; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 2px; font-weight: 500; }
+    .tag.gold  { background: var(--gold-light);  color: var(--gold);  }
+    .tag.teal  { background: var(--teal-light);  color: var(--teal);  }
+    .tag.coral { background: var(--coral-light); color: var(--coral); }
+    .tag.steel { background: var(--steel-light); color: var(--steel); }
+
+    .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 48px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    @media (max-width: 580px) { .hero-stats { grid-template-columns: 1fr 1fr; } .hero-stat:nth-child(2) { border-right: none; } }
+    .hero-stat { padding: 20px 22px; border-right: 1px solid var(--border); background: white; }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat .s-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 6px; }
+    .hero-stat .s-value { font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 600; color: var(--ink); line-height: 1; }
+    .hero-stat .s-note { font-size: 11px; color: var(--ink-light); margin-top: 4px; display: block; }
+
+    .chapter { margin: 80px 0 40px; position: relative; }
+    .chapter-inner { display: flex; align-items: flex-start; gap: 0; }
+    .chapter-num { font-family: 'Inter', sans-serif; font-size: 6rem; font-weight: 300; line-height: 0.85; color: var(--gold-light); letter-spacing: -0.04em; margin-right: 20px; flex-shrink: 0; user-select: none; border-right: 3px solid var(--gold); padding-right: 20px; }
+    .chapter-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 6px; }
+    .chapter-title { font-family: 'Inter', sans-serif; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 600; line-height: 1.15; color: var(--ink); }
+    .chapter-rule { height: 1px; background: var(--border); margin-top: 28px; }
+
+    p { color: var(--ink-mid); margin-bottom: 20px; font-weight: 400; font-size: 15.5px; }
+    strong, b { color: var(--ink); font-weight: 600; }
+    h3 { font-family: 'Inter', sans-serif; font-size: 1.45rem; font-weight: 600; color: var(--ink); margin: 36px 0 14px; letter-spacing: -0.01em; }
+    h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-light); margin: 24px 0 10px; }
+
+    .pull-quote { margin: 44px -24px; padding: 36px 48px 36px 36px; background: var(--ink); border-radius: 4px; position: relative; overflow: hidden; }
+    .pull-quote::before { content: '\201C'; font-family: 'Inter', sans-serif; font-size: 9rem; color: var(--gold); opacity: 0.15; position: absolute; top: -20px; left: 16px; line-height: 1; pointer-events: none; }
+    .pull-quote blockquote { font-family: 'Inter', sans-serif; font-style: italic; font-size: 1.35rem; line-height: 1.6; color: #e8e4da; position: relative; z-index: 1; }
+    .pull-quote cite { display: block; margin-top: 16px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-style: normal; }
+
+    .vault-split { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 32px 0; }
+    @media (max-width: 560px) { .vault-split { grid-template-columns: 1fr; } }
+    .vault-panel { padding: 28px 26px; }
+    .vault-panel.conserv { background: white; border-right: 1px solid var(--border); }
+    .vault-panel.aggress { background: var(--cream-dark); }
+    .vault-badge { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 18px; }
+    .vault-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-teal  { background: var(--teal); }
+    .dot-coral { background: var(--coral); }
+    .vault-badge span { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .vault-badge.teal span  { color: var(--teal); }
+    .vault-badge.coral span { color: var(--coral); }
+    .vault-panel h4 { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 700; text-transform: none; letter-spacing: 0; color: var(--ink); margin: 0 0 16px; }
+    .vault-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 13.5px; }
+    .vault-row:last-child { border: none; }
+    .vault-row .vk { color: var(--ink-light); }
+    .vault-row .vv { color: var(--ink); font-weight: 600; }
+
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 28px 0; }
+    .data-table thead tr { border-bottom: 2px solid var(--ink); }
+    .data-table th { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-light); padding: 10px 14px 10px 0; text-align: left; font-weight: 500; }
+    .data-table td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--border); color: var(--ink-mid); vertical-align: top; line-height: 1.55; }
+    .data-table td:first-child { color: var(--ink); font-weight: 500; }
+    .data-table tbody tr:hover td { background: rgba(176,125,42,0.04); }
+    .was { color: var(--coral); font-weight: 600; }
+    .now { color: var(--teal);  font-weight: 600; }
+
+    .insight { border-left: 3px solid var(--gold); padding: 20px 24px; background: white; border-radius: 0 6px 6px 0; margin: 28px 0; box-shadow: 4px 4px 0 var(--gold-light); }
+    .insight.teal { border-left-color: var(--teal); box-shadow: 4px 4px 0 var(--teal-light); }
+    .insight.coral { border-left-color: var(--coral); box-shadow: 4px 4px 0 var(--coral-light); }
+    .insight.steel { border-left-color: var(--steel); box-shadow: 4px 4px 0 var(--steel-light); }
+    .insight-kicker { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: 500; }
+    .insight-kicker.gold  { color: var(--gold); }
+    .insight-kicker.teal  { color: var(--teal); }
+    .insight-kicker.coral { color: var(--coral); }
+    .insight-kicker.steel { color: var(--steel); }
+    .insight p { font-size: 14.5px; margin-bottom: 0; }
+
+    .flow { display: flex; gap: 0; margin: 32px 0; overflow-x: auto; }
+    .flow-node { flex: 1; min-width: 110px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 4px; position: relative; }
+    .flow-node:not(:last-child)::after { content: ''; position: absolute; right: -2px; top: 21px; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; z-index: 2; }
+    .flow-node:not(:last-child)::before { content: ''; position: absolute; right: -30%; top: 23px; width: 60%; height: 1px; background: var(--border); }
+    .flow-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; margin-bottom: 10px; border: 2px solid var(--border); background: white; color: var(--ink-mid); z-index: 1; position: relative; }
+    .flow-node.active .flow-circle { background: var(--ink); border-color: var(--ink); color: var(--gold); }
+    .flow-label { font-size: 11px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+    .flow-time { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--teal); margin-top: 4px; }
+
+    .code-wrap { background: #16141f; border-radius: 6px; margin: 28px 0; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 18px; background: #1e1b2e; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .code-header .ch-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #b07d2a; }
+    .code-header .ch-dots { display: flex; gap: 5px; }
+    .code-header .ch-dots span { width: 8px; height: 8px; border-radius: 50%; }
+    .code-header .ch-dots span:nth-child(1) { background: #ff5f57; }
+    .code-header .ch-dots span:nth-child(2) { background: #ffbd2e; }
+    .code-header .ch-dots span:nth-child(3) { background: #28c840; }
+    .code-body { padding: 20px 22px; overflow-x: auto; }
+    .code-body pre { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.85; color: #cdd6f4; white-space: pre-wrap; }
+    .sk { color: #89b4fa; }
+    .sf { color: #cba6f7; }
+    .ss { color: #a6e3a1; }
+    .sc { color: #585b70; font-style: italic; }
+    .sn { color: #fab387; }
+    .st { color: #f38ba8; }
+
+    .rice-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 28px 0; }
+    .rice-table thead tr { border-bottom: 2px solid var(--ink); }
+    .rice-table th { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-light); padding: 10px 12px 10px 0; text-align: left; }
+    .rice-table td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--border); color: var(--ink-mid); vertical-align: middle; }
+    .rice-table td:first-child { color: var(--ink); font-weight: 500; }
+    .rice-score { display: inline-block; font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 13px; padding: 2px 10px; border-radius: 3px; }
+    .rs-high   { background: var(--teal-light);  color: var(--teal);  }
+    .rs-medium { background: var(--gold-light);  color: var(--gold);  }
+    .rs-low    { background: var(--coral-light); color: var(--coral); }
+
+    .us-box { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 26px 28px; margin: 28px 0; box-shadow: 0 2px 16px var(--shadow); }
+    .us-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .us-box p { font-size: 14px; line-height: 1.7; color: var(--ink-mid); margin-bottom: 10px; }
+    .us-box p strong { color: var(--ink); }
+    .ac-list { list-style: none; padding: 0; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+    .ac-list li { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 13.5px; color: var(--ink-mid); line-height: 1.6; }
+    .ac-badge { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--steel-light); color: var(--steel); padding: 2px 6px; border-radius: 2px; margin-top: 3px; }
+
+    .ab-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 28px 0; }
+    @media (max-width: 520px) { .ab-container { grid-template-columns: 1fr; } }
+    .ab-panel { border: 1px solid var(--border); border-radius: 6px; padding: 22px 24px; background: white; }
+    .ab-panel.winner { border-color: var(--teal); }
+    .ab-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .ab-letter { font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--ink-faint); }
+    .ab-panel.winner .ab-letter { color: var(--teal); }
+    .ab-win-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--teal-light); color: var(--teal); padding: 3px 8px; border-radius: 2px; }
+    .ab-panel h5 { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 12px; line-height: 1.4; }
+    .ab-panel ul { list-style: none; padding: 0; }
+    .ab-panel ul li { font-size: 12.5px; color: var(--ink-mid); padding: 5px 0; border-bottom: 1px dashed var(--border); line-height: 1.5; }
+    .ab-panel ul li:last-child { border: none; }
+    .metric-big { font-family: 'Inter', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--teal); display: block; margin: 12px 0 4px; }
+    .metric-big.coral { color: var(--coral); }
+
+    .stat-band { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 32px 0; background: white; }
+    @media (max-width: 520px) { .stat-band { grid-template-columns: 1fr; } }
+    .stat-cell { padding: 24px 22px; border-right: 1px solid var(--border); text-align: center; }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell .sc-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 8px; }
+    .stat-cell .sc-val { font-family: 'Inter', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--ink); line-height: 1; }
+    .stat-cell .sc-delta { font-size: 11px; font-weight: 600; margin-top: 6px; display: block; }
+    .sc-delta.up   { color: var(--teal); }
+    .sc-delta.down { color: var(--coral); }
+
+    .result-box { background: var(--ink); border-radius: 6px; padding: 34px 36px; margin: 32px 0; }
+    .result-box p { color: #c8c4d4; font-size: 15px; line-height: 1.75; margin: 0; }
+    .result-box strong { color: var(--gold); }
+
+    .testimonial { background: var(--cream-dark); border-radius: 6px; padding: 24px 28px; margin: 20px 0; border-top: 3px solid var(--gold); }
+    .testimonial p { font-family: 'Inter', sans-serif; font-style: italic; font-size: 1.1rem; line-height: 1.6; color: var(--ink-mid); margin-bottom: 10px; }
+    .testimonial cite { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--ink-light); font-style: normal; }
+
+    .learn-list { list-style: none; padding: 0; margin: 24px 0; }
+    .learn-list li { display: flex; align-items: flex-start; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+    .learn-list li:last-child { border: none; }
+    .learn-num { font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 700; color: var(--border); line-height: 1; flex-shrink: 0; width: 36px; text-align: right; }
+    .learn-text { font-size: 14.5px; color: var(--ink-mid); line-height: 1.7; }
+    .learn-text strong { color: var(--ink); }
+
+    .divider { height: 1px; background: var(--border); margin: 56px 0; }
+    .divider.gold { background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    sup.note { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--ink-faint); letter-spacing: 0.06em; vertical-align: super; margin-left: 1px; }
+
+    footer { border-top: 2px solid var(--ink); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    footer p { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--ink-light); margin: 0; }
+
+    .animate-in { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .animate-in.visible { opacity: 1; transform: translateY(0); }
+
+    .bench-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+    .bd-good { background: var(--teal); }
+    .bd-bad  { background: var(--coral); }
+    .bd-mid  { background: var(--gold); }
+  </style>
+</head>
+<body>
+
+<div class="page ai-style-change-1">
+
+  <div class="topbar">
+    <span class="topbar-brand">PrimeVault · Case Study</span>
+    <span class="topbar-meta">PM · 12 Months · Ethereum &amp; Arbitrum</span>
+  </div>
+
+  <header class="hero animate-in visible">
+    
+    <h1>Designing and Scaling<br>a DeFi Portfolio<br>Management Product:<br><span class="accent">PrimeVault</span></h1>
+    <p class="hero-sub">How I built a mutual-fund equivalent for crypto that turned retail investor fear into systematic, set-and-forget wealth compounding, and grew to $14.2M TVL during a bear market.</p>
+    <div class="hero-tags"><span class="tag gold">DeFi Protocol</span><span class="tag teal">Smart Contracts</span><span class="tag coral">Growth Strategy</span><span class="tag steel">On-Chain Analytics</span></div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="s-label">Peak TVL</span><span class="s-value">$14.2M</span><span class="s-note">90 days post-launch</span></div>
+      <div class="hero-stat"><span class="s-label">30-Day Retention</span><span class="s-value">61%</span><span class="s-note">from 24% at launch</span></div>
+      <div class="hero-stat"><span class="s-label">Deposit Time</span><span class="s-value">&lt;2min</span><span class="s-note">down from 7 min 12 sec</span></div>
+      <div class="hero-stat"><span class="s-label">Support Tickets</span><span class="s-value">68%</span><span class="s-note">post redesign</span></div>
+    </div>
+  </header>
+
+  <div class="chapter animate-in visible" id="s1"><div class="chapter-inner"><div class="chapter-num">01</div><div class="chapter-text"><span class="chapter-eyebrow">Chapter One</span><h2 class="chapter-title">Context &amp; Problem</h2></div></div><div class="chapter-rule"></div></div>
+  <div class="animate-in visible">
+    <p>In early 2022, the DeFi ecosystem was simultaneously its most promising and most hostile moment for retail investors. Hundreds of yield protocols existed, yet the average person needed to understand liquidity pools, impermanent loss, slippage, gas auctions, private key custody, and smart contract risk, just to park five hundred dollars into a yield strategy. That is not democratised finance. That is a puzzle game with irreversible consequences.</p>
+    <p>I joined the founding team as Lead Product Manager to build <strong>PrimeVault</strong>, a protocol designed to function as a <strong>crypto-native equivalent of a mutual fund SIP</strong>. The product offered two algorithmically rebalanced vaults, each targeting a distinct risk appetite:</p>
+
+    <div class="vault-split">
+      <div class="vault-panel conserv"><div class="vault-badge teal"><span class="dot dot-teal"></span><span>Conservative</span></div><h4>Anchor Vault</h4><div class="vault-row"><span class="vk">Core assets</span><span class="vv">USDC, stETH, ETH</span></div><div class="vault-row"><span class="vk">Protocol exposure</span><span class="vv">Aave, Lido, Compound</span></div><div class="vault-row"><span class="vk">Target APY</span><span class="vv">6-12%</span></div><div class="vault-row"><span class="vk">Rebalance trigger</span><span class="vv">5% drift or weekly</span></div><div class="vault-row"><span class="vk">Risk score</span><span class="vv">3 / 10</span></div><div class="vault-row"><span class="vk">Management fee</span><span class="vv">0.15% AUM / yr</span></div></div>
+      <div class="vault-panel aggress"><div class="vault-badge coral"><span class="dot dot-coral"></span><span>Aggressive</span></div><h4>Apex Vault</h4><div class="vault-row"><span class="vk">Core assets</span><span class="vv">ETH, wBTC, DeFi blue chips</span></div><div class="vault-row"><span class="vk">Protocol exposure</span><span class="vv">Curve, Convex, GMX</span></div><div class="vault-row"><span class="vk">Target APY</span><span class="vv">18-40%</span></div><div class="vault-row"><span class="vk">Rebalance trigger</span><span class="vv">8% drift or bi-weekly</span></div><div class="vault-row"><span class="vk">Risk score</span><span class="vv">7 / 10</span></div><div class="vault-row"><span class="vk">Management fee</span><span class="vv">0.5% AUM + 10% perf.</span></div></div>
+    </div>
+
+    <p>The core user problem was three-dimensional. First, <strong>cognitive overload:</strong> the sheer number of protocols, strategies, and tokens made informed decision-making impossible for a non-technical investor. Second, <strong>financial dread:</strong> gas fees routinely consumed 5-11% of small deposits, punishing the very users DeFi claimed to serve. Third, <strong>trust paralysis:</strong> a string of high-profile rug pulls and smart contract exploits had made every new protocol feel like a landmine. Users wanted systematic, compounding yield. Every tool required them to behave like a full-time quant trader.</p>
+  </div>
+
+  <div class="pull-quote animate-in visible"><blockquote>I just want a crypto SIP. Deposit a fixed amount every month, let it compound, check it at the end of the year. But every time I try, I lose twenty dollars in gas before I even get in, I have no idea which pool is actually safe, and last week three people in my Telegram group got completely wiped out. I am terrified of doing something wrong and watching everything disappear silently overnight.</blockquote><cite>Composite user quote drawn from 14 discovery interviews, Q1 2023</cite></div>
+
+  <div class="animate-in visible"><p>That composite quote became our internal product north star. Every design decision, every prioritisation debate, every engineering trade-off was tested against one question: does this reduce that fear, or add to it?</p></div>
+
+  <div class="chapter animate-in visible" id="s2"><div class="chapter-inner"><div class="chapter-num">02</div><div class="chapter-text"><span class="chapter-eyebrow">Chapter Two</span><h2 class="chapter-title">Discovery &amp; User Research</h2></div></div><div class="chapter-rule"></div></div>
+  <div class="animate-in visible">
+    <h3>Segmenting the User Base</h3>
+    <p>I ran 14 moderated user interviews and a 220-respondent screener survey distributed across DeFi Discord communities, Reddit boards, and a bootstrapped email list. Three distinct user archetypes emerged, though the third was a surprise:</p>
+    <table class="data-table"><thead><tr><th>Segment</th><th>Profile</th><th>Primary Pain Point</th><th>Vault Affinity</th></tr></thead><tbody>
+      <tr><td>Crypto Curious</td><td>Traditional investors, 28-45 yr, held BTC / ETH on Coinbase, never touched a dApp</td><td>Gas fees, jargon overload, zero trust in new protocols</td><td>Anchor (Conservative)</td></tr>
+      <tr><td>Degen Farmers</td><td>Active DeFi users, 22-34 yr, chasing APY across 6-10 protocols simultaneously</td><td>Manual rebalancing fatigue, gas optimisation, missed windows</td><td>Apex (Aggressive)</td></tr>
+      <tr><td>Institutional-Lite</td><td>Small family offices, angels, DAO treasuries allocating $50K-$500K</td><td>No audit trails, no risk-adjusted reporting, no compliance paper trail</td><td>Both, with custom reporting</td></tr>
+    </tbody></table>
+    <p>The most strategically important finding was counter-intuitive: <strong>degen farmers were the noisiest early adopters but the worst long-term customers.</strong> Their 90-day retention in our beta cohort was 18% (approx.) because they would abandon any vault the moment a new protocol offered 5% higher APY. The Crypto Curious segment, though slower to acquire and more expensive to educate, showed 61% 90-day retention once they had successfully completed their first deposit. I re-weighted our acquisition and UX strategy accordingly, building toward the nervous new entrant, not the sophisticated DeFi native.</p>
+
+    <h3>On-Chain Analytics Insight That Changed Our Roadmap</h3>
+    <p>I pulled on-chain data from Dune Analytics, specifically examining wallets that had interacted with Yearn Finance vaults over the prior 90 days, and cross-referenced their deposit sizes with their gas expenditure. The query structure was as follows:</p>
+  </div>
+
+  <div class="code-wrap animate-in visible"><div class="code-header"><div class="ch-dots"><span></span><span></span><span></span></div><span class="ch-label">Dune Analytics · "Gas Bleed on Small Depositors"</span></div><div class="code-body"><pre><span class="sk">WITH</span> yearn_deposits <span class="sk">AS</span> (
+  <span class="sk">SELECT</span> evt_tx_hash, sender, amount <span class="sn">/ 1e6</span> <span class="sk">AS</span> deposit_usdc,
+    gas_used * gas_price <span class="sn">/ 1e18</span> * eth_usd_price <span class="sk">AS</span> gas_cost_usd, block_time
+  <span class="sk">FROM</span> yearn_ethereum.Vault_evt_Deposit yvd
+  <span class="sk">JOIN</span> prices.usd p <span class="sk">ON</span> p.symbol = <span class="ss">'ETH'</span> <span class="sk">AND</span> date_trunc(<span class="ss">'hour'</span>, p.minute) = date_trunc(<span class="ss">'hour'</span>, yvd.block_time)
+  <span class="sk">WHERE</span> yvd.block_time &gt;= now() - interval <span class="ss">'90 days'</span>
+)
+<span class="sk">SELECT</span> <span class="sf">ROUND</span>(deposit_usdc / <span class="sn">100</span>) * <span class="sn">100</span> <span class="sk">AS</span> deposit_bucket_usd,
+  <span class="sf">AVG</span>(gas_cost_usd) <span class="sk">AS</span> avg_gas_usd,
+  <span class="sf">AVG</span>(gas_cost_usd / deposit_usdc * <span class="sn">100</span>) <span class="sk">AS</span> gas_as_pct_of_deposit,
+  <span class="sf">COUNT</span>(*) <span class="sk">AS</span> transaction_count, <span class="sf">COUNT</span>(<span class="sk">DISTINCT</span> sender) <span class="sk">AS</span> unique_wallets
+<span class="sk">FROM</span> yearn_deposits
+<span class="sk">GROUP BY</span> <span class="sn">1</span> <span class="sk">ORDER BY</span> deposit_bucket_usd</pre></div></div>
+
+  <div class="animate-in visible"><div class="insight teal"><span class="insight-kicker teal">Surprising On-Chain Finding</span><p>For wallets depositing under $500, the average gas cost represented <strong>4.8% of the deposit value</strong> (approx.), spiking to 11% or more during peak congestion windows. This meant a first-time user depositing $300 was immediately down $14 to $33 before accruing a single dollar of yield. More critically, over <strong>38% of wallets in this deposit bracket made zero subsequent on-chain interactions</strong>, suggesting they were effectively burned out of DeFi at their first point of contact. This single finding justified gas-batching infrastructure as a non-negotiable Day 1 platform feature, not a later optimisation.</p></div>
+
+    <h3>Competitive Benchmarking</h3>
+    <p>I mapped Yearn Finance, Set Protocol (TokenSets), and Enzyme Finance across five dimensions: onboarding UX quality, gas efficiency, risk transparency, mobile accessibility, and cross-chain availability. The gap we targeted was unambiguous:</p>
+    <table class="data-table"><thead><tr><th>Platform</th><th>What They Did Well</th><th>The Gap PrimeVault Exploited</th></tr></thead><tbody>
+      <tr><td>Yearn Finance</td><td><span class="bench-dot bd-good"></span>Battle-hardened contracts, large TVL, multiple audits, trusted by DeFi natives</td><td><span class="bench-dot bd-bad"></span>Zero UX hand-holding; assumed technical fluency. No risk score, no guided onboarding, raw gas exposure.</td></tr>
+      <tr><td>Set Protocol</td><td><span class="bench-dot bd-good"></span>Composable strategy sets, thematic indices (DeFi Pulse Index), clear branding</td><td><span class="bench-dot bd-bad"></span>Static allocations with no dynamic rebalancing. No gas abstraction, no fiat on-ramp, no risk explanation layer.</td></tr>
+      <tr><td>Enzyme Finance</td><td><span class="bench-dot bd-good"></span>Institutional-grade vault controls, permissioned access, robust reporting</td><td><span class="bench-dot bd-bad"></span>Overwhelming complexity for retail. Implied minimum deposit of $10K+. UI assumed the user was a fund manager.</td></tr>
+    </tbody></table>
+    <p>The white space was clear: <strong>nobody owned the non-technical retail investor who wanted systematic yield without a qualification in distributed systems.</strong> We built directly into that gap.</p>
+  </div>
+
+  <div class="chapter animate-in visible" id="s3"><div class="chapter-inner"><div class="chapter-num">03</div><div class="chapter-text"><span class="chapter-eyebrow">Chapter Three</span><h2 class="chapter-title">Product Definition &amp; Core Experience</h2></div></div><div class="chapter-rule"></div></div>
+  <div class="animate-in visible">
+    <h3>How the Algorithms Work, in Plain Language</h3>
+    <div class="insight"><span class="insight-kicker gold">Anchor Vault (Conservative) — Rebalancing Logic</span><p>The vault maintains a target allocation: 50% USDC deposited into Aave for stable yield, 30% stETH accruing Lido staking rewards, and 20% ETH held as a liquid reserve. An on-chain keeper bot checks allocation drift every week. If any asset moves more than 5% from its target weight, due to price movements or yield reinvestment, the rebalancer executes a single aggregated swap via 1inch to restore balance. The cost of this operation is bundled into the 0.15% annual management fee, charged on withdrawal. Users never see a separate rebalancing gas transaction.</p></div>
+    <div class="insight coral"><span class="insight-kicker coral">Apex Vault (Aggressive) — Rebalancing Logic</span><p>This vault uses a momentum-weighted allocation across ETH, wBTC, and a curated basket of DeFi tokens. A Chainlink-fed oracle scores each asset on 30-day price momentum and protocol health signals: TVL growth rate, audit recency, and liquidity depth. Allocations shift when any asset drifts 8% from its score-weighted target, or bi-weekly regardless. The fee structure is 0.5% annual management fee plus a 10% performance fee applied only to gains above the 6-month high-water mark, protecting users from paying performance fees after a drawdown recovery.</p></div>
+    <h3>The Simplified User Flow</h3>
+    <p>We designed the core journey to feel as familiar as opening a fixed deposit, not deploying a financial instrument.</p>
+  </div>
+
+  <div class="flow animate-in visible">
+    <div class="flow-node"><div class="flow-circle">01</div><span class="flow-label">Connect Wallet</span><span class="flow-time">~15 sec</span></div>
+    <div class="flow-node"><div class="flow-circle">02</div><span class="flow-label">Risk Quiz</span><span class="flow-time">~30 sec</span></div>
+    <div class="flow-node active"><div class="flow-circle">03</div><span class="flow-label">Vault Recommended</span><span class="flow-time">Instant</span></div>
+    <div class="flow-node"><div class="flow-circle">04</div><span class="flow-label">Review Terms</span><span class="flow-time">~20 sec</span></div>
+    <div class="flow-node"><div class="flow-circle">05</div><span class="flow-label">One-Click Deposit</span><span class="flow-time">~30 sec</span></div>
+    <div class="flow-node"><div class="flow-circle">06</div><span class="flow-label">Live Dashboard</span><span class="flow-time">Ongoing</span></div>
+  </div>
+
+  <div class="animate-in visible">
+    <h3>Before vs. After: How We Reduced Deposit Time by 73%</h3>
+    <p>In our initial prototype, depositing into the conservative vault required an average of <strong>7 minutes and 12 seconds</strong>, measured across 18 usability test participants. The redesigned experience brought this below <strong>2 minutes</strong>. Here is precisely what changed and why each change mattered:</p>
+    <table class="data-table"><thead><tr><th>Step</th><th>Before</th><th>After</th><th>Mechanism of Change</th></tr></thead><tbody>
+      <tr><td>Token Approval</td><td><span class="was">2 Metamask transactions</span></td><td><span class="now">1 Permit2 signature</span></td><td>Integrated Uniswap Permit2 via EIP-2612; users sign once off-chain instead of confirming two separate on-chain approvals</td></tr>
+      <tr><td>Gas Configuration</td><td><span class="was">User manually set gas limit and tip</span></td><td><span class="now">Auto-configured by platform</span></td><td>Frontend calls eth_feeHistory to compute optimal EIP-1559 tip; user never sees the gas panel in Metamask</td></tr>
+      <tr><td>Vault Selection</td><td><span class="was">User reads 4 vault descriptions independently</span></td><td><span class="now">Risk quiz outputs single recommendation</span></td><td>5-question quiz (time horizon, DeFi familiarity, drawdown tolerance, investment size, goal) maps algorithmically to a vault</td></tr>
+      <tr><td>Asset Preparation</td><td><span class="was">User manually swaps ETH to USDC before depositing</span></td><td><span class="now">Vault accepts ETH natively via zap-in</span></td><td>Zap-in smart contract aggregates the DEX swap and vault deposit atomically in one transaction; user deposits any major token</td></tr>
+      <tr><td>Confirmation UX</td><td><span class="was">User watches Etherscan for 3-5 minutes</span></td><td><span class="now">In-app live block countdown</span></td><td>WebSocket subscription to pending transaction hash; push notification triggers on confirmation; no external tab required</td></tr>
+      <tr><td>Risk Disclosure</td><td><span class="was">Full-page legal scroll (94% skip rate in testing)</span></td><td><span class="now">3-bullet progressive disclosure</span></td><td>Legal team approved a tiered format: three key risks shown by default, full disclosure available on expansion</td></tr>
+    </tbody></table>
+    <p>The <strong>zap-in contract</strong> was the single highest-leverage engineering investment: eliminating the manual asset swap step reduced total deposit friction by approximately 40% in one sprint. The drop-off rate at the deposit confirmation screen fell from 61% to 22% (approx.) within four weeks of shipping.</p>
+  </div>
+
+  <div class="chapter animate-in visible" id="s4"><div class="chapter-inner"><div class="chapter-num">04</div><div class="chapter-text"><span class="chapter-eyebrow">Chapter Four</span><h2 class="chapter-title">My PM Role &amp; Strategic Leadership</h2></div></div><div class="chapter-rule"></div></div>
+  <div class="animate-in visible">
+    <h3>The Hardest Prioritisation Decision</h3>
+    <p>Three weeks before our planned public launch, the engineering team flagged they had capacity for one more major feature before go-live. I faced a genuine fork: build <strong>Option A</strong>, a structured educational onboarding module covering DeFi fundamentals and vault mechanics, or ship <strong>Option B</strong>, the conservative vault first with a polished but education-light experience, relying on product design to do the teaching.</p>
+    <p>I ran a RICE scoring exercise with the full cross-functional team to make the trade-off visible rather than political:</p>
+    <table class="rice-table"><thead><tr><th>Feature</th><th>Reach (90d)</th><th>Impact</th><th>Confidence</th><th>Effort</th><th>RICE Score</th></tr></thead><tbody>
+      <tr><td>Conservative Vault Launch</td><td>800 users</td><td>3 / 3</td><td>85%</td><td>3 wks</td><td><span class="rice-score rs-high">680</span></td></tr>
+      <tr><td>Risk Score Visualisation</td><td>800 users</td><td>2 / 3</td><td>70%</td><td>2 wks</td><td><span class="rice-score rs-high">560</span></td></tr>
+      <tr><td>Referral Programme</td><td>1,200 users</td><td>2 / 3</td><td>60%</td><td>3 wks</td><td><span class="rice-score rs-medium">480</span></td></tr>
+      <tr><td>Educational Onboarding Module</td><td>800 users</td><td>2 / 3</td><td>50%</td><td>4 wks</td><td><span class="rice-score rs-low">200</span></td></tr>
+    </tbody></table>
+    <p>The RICE score confirmed my instinct: ship the conservative vault first, and treat the product design itself as the education. A clean risk quiz, progressive disclosure, and the live risk score visualisation would do more for user confidence than a five-screen onboarding tutorial that most users would skip. The formal education module shipped six weeks post-launch, built on real user data about exactly which concepts generated the most support tickets.</p>
+
+    <h3>PRD Excerpt: Risk Score Visualisation</h3>
+  </div>
+
+  <div class="us-box animate-in visible">
+    <span class="us-label">User Story · Feature Specification · Risk Score Visualisation</span>
+    <p><strong>Feature Name:</strong> Dynamic Vault Risk Score with Drill-Down Breakdown</p>
+    <p><strong>As a</strong> Crypto Curious user who has deposited into Anchor Vault,</p>
+    <p><strong>I want to</strong> see a live, colour-coded risk score from 1 to 10 with a plain-English explanation of what is currently driving it,</p>
+    <p><strong>So that</strong> I feel confident my funds remain in an appropriately conservative strategy and I am alerted immediately if market conditions shift.</p>
+    <ul class="ac-list"><li><span class="ac-badge">AC1</span> Risk score updates every block and is rendered as a radial gauge: green zone (1-4), amber zone (5-7), red zone (8-10).</li><li><span class="ac-badge">AC2</span> Tapping the gauge opens a breakdown panel showing the three weighted inputs: protocol health (40% weight, sourced from Gauntlet risk parameters), asset volatility (35% weight, sourced from Chainlink feeds), and liquidity depth (25% weight, sourced from DefiLlama).</li><li><span class="ac-badge">AC3</span> If the conservative vault risk score rises above 6, an in-app push notification fires within one block with a plain-English explanation (e.g., "Aave liquidity has thinned; we are reducing USDC allocation by 8%").</li><li><span class="ac-badge">AC4</span> A 30-day sparkline of risk score history is displayed below the gauge; no language implies a prediction or financial advice.</li><li><span class="ac-badge">AC5</span> All risk labels are reviewed by legal; the score is described as an "internal risk indicator," not a rating.</li></ul>
+  </div>
+
+  <div class="animate-in visible">
+    <h3>Cross-Functional Team Alignment</h3>
+    <p>The team was a 12-person squad spanning 3 Solidity engineers, 2 frontend engineers, 1 tokenomics designer, 1 security researcher, 1 data engineer, and 3 in growth and marketing, distributed across four time zones. Alignment required a deliberate operating structure:</p>
+    <ul class="learn-list"><li><div class="learn-num">01</div><div class="learn-text"><strong>Joint Spec Format:</strong> I created a shared specification document that included the user story and the contract interface side by side. Solidity devs and frontend engineers had historically worked from separate documents, causing late-stage "this is not buildable" surprises. The joint format meant engineering constraints surfaced in planning, not in review.</div></li>
+    <li><div class="learn-num">02</div><div class="learn-text"><strong>Tokenomics Red Team Sessions:</strong> Every two weeks, the tokenomics designer and I ran an adversarial review of the fee and incentive structures, stress-testing against whale extraction scenarios and liquidity withdrawal spirals. Two incentive designs were blocked before shipping because this process surfaced perverse dynamics before they became live exploits.</div></li>
+    <li><div class="learn-num">03</div><div class="learn-text"><strong>Growth as Research Partners:</strong> I embedded the growth lead in every user interview from week one. By the time we wrote landing page copy, the marketing team had heard users' exact language around fear and trust. Our launch landing page converted at 8.3% (approx.) wallet connection rate, versus a DeFi industry benchmark of approximately 3-4%.</div></li></ul>
+  </div>
+
+  <div class="chapter animate-in visible" id="s5"><div class="chapter-inner"><div class="chapter-num">05</div><div class="chapter-text"><span class="chapter-eyebrow">Chapter Five</span><h2 class="chapter-title">Analytics, Experimentation &amp; Growth</h2></div></div><div class="chapter-rule"></div></div>
+  <div class="animate-in visible">
+    <h3>The Dune Dashboard I Owned</h3>
+    <p>I built and maintained the team's primary analytics dashboard in Dune from day one. Three query sets formed the core of our weekly data reviews:</p>
+  </div>
+  <div class="code-wrap animate-in visible"><div class="code-header"><div class="ch-dots"><span></span><span></span><span></span></div><span class="ch-label">Query 1 · TVL by Vault Over Time</span></div><div class="code-body"><pre><span class="sk">SELECT</span> date_trunc(<span class="ss">'day'</span>, block_time) AS day, vault_type,
+  <span class="sf">SUM</span>(net_deposit_usd) <span class="sk">OVER</span> (<span class="sk">PARTITION BY</span> vault_type <span class="sk">ORDER BY</span> date_trunc(<span class="ss">'day'</span>, block_time)) AS cumulative_tvl_usd
+<span class="sk">FROM</span> primevault.vault_events
+<span class="sk">WHERE</span> event_type <span class="sk">IN</span> (<span class="ss">'Deposit'</span>, <span class="ss">'Withdraw'</span>)
+<span class="sk">ORDER BY</span> day, vault_type</pre></div></div>
+  <div class="code-wrap animate-in visible"><div class="code-header"><div class="ch-dots"><span></span><span></span><span></span></div><span class="ch-label">Query 2 · 30-Day Retention Cohorts</span></div><div class="code-body"><pre><span class="sk">WITH</span> first_deposit <span class="sk">AS</span> (
+  <span class="sk">SELECT</span> wallet, <span class="sf">MIN</span>(block_time) <span class="sk">AS</span> cohort_date
+  <span class="sk">FROM</span> primevault.vault_events <span class="sk">WHERE</span> event_type = <span class="ss">'Deposit'</span> <span class="sk">GROUP BY</span> wallet
+),
+still_active <span class="sk">AS</span> (
+  <span class="sk">SELECT DISTINCT</span> e.wallet
+  <span class="sk">FROM</span> primevault.vault_events e
+  <span class="sk">JOIN</span> first_deposit fd <span class="sk">ON</span> e.wallet = fd.wallet
+  <span class="sk">WHERE</span> e.block_time <span class="sk">BETWEEN</span> fd.cohort_date + interval <span class="ss">'25 days'</span> <span class="sk">AND</span> fd.cohort_date + interval <span class="ss">'35 days'</span>
+)
+<span class="sk">SELECT</span> date_trunc(<span class="ss">'week'</span>, fd.cohort_date) <span class="sk">AS</span> cohort_week, <span class="sf">COUNT</span>(fd.wallet) <span class="sk">AS</span> depositors,
+  <span class="sf">COUNT</span>(sa.wallet) <span class="sk">AS</span> retained_30d,
+  <span class="sf">ROUND</span>(<span class="sf">COUNT</span>(sa.wallet) * <span class="sn">100.0</span> / <span class="sf">COUNT</span>(fd.wallet), <span class="sn">1</span>) <span class="sk">AS</span> retention_pct
+<span class="sk">FROM</span> first_deposit fd
+<span class="sk">LEFT JOIN</span> still_active sa <span class="sk">ON</span> fd.wallet = sa.wallet
+<span class="sk">GROUP BY</span> <span class="sn">1</span> <span class="sk">ORDER BY</span> cohort_week</pre></div></div>
+  <div class="code-wrap animate-in visible"><div class="code-header"><div class="ch-dots"><span></span><span></span><span></span></div><span class="ch-label">Query 3 · Referral Attribution by Wallet</span></div><div class="code-body"><pre><span class="sk">SELECT</span> referrer_wallet,
+  <span class="sf">COUNT</span>(<span class="sk">DISTINCT</span> referred_wallet) <span class="sk">AS</span> referrals_driven,
+  <span class="sf">SUM</span>(referred_deposit_usd) <span class="sk">AS</span> referred_tvl_usd,
+  <span class="sf">AVG</span>(referred_deposit_usd) <span class="sk">AS</span> avg_referred_deposit,
+  <span class="sf">MIN</span>(referral_timestamp) <span class="sk">AS</span> first_referral_date
+<span class="sk">FROM</span> primevault.referral_events
+<span class="sk">GROUP BY</span> referrer_wallet
+<span class="sk">HAVING</span> <span class="sf">COUNT</span>(<span class="sk">DISTINCT</span> referred_wallet) &gt;= <span class="sn">2</span>
+<span class="sk">ORDER BY</span> referred_tvl_usd <span class="sk">DESC</span></pre></div></div>
+
+  <div class="animate-in visible">
+    <h3>A/B Test: Landing Page Wallet Connection Rate</h3>
+    <p>I hypothesised that embedding live social proof with a specific depositor count and APY figure in the hero section would outperform a generic action-oriented headline. We ran a two-variant test for 11 days across equal traffic splits of 4,200 unique visitors each.</p>
+  </div>
+
+  <div class="ab-container animate-in visible">
+    <div class="ab-panel"><div class="ab-heading"><span class="ab-letter">A</span><span style="font-size:12px; color: var(--ink-light); font-family:&#39;JetBrains Mono&#39;,monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase;">Control</span></div><h5>"Connect Wallet to Start Earning"</h5><ul><li>No social proof in hero section</li><li>Generic CTA button, no trust signals</li><li>No audit badge or protocol insurance reference</li><li>4,200 unique visitors</li></ul><span class="metric-big coral">6.1%</span><span style="font-size:12px; color:var(--ink-light);">Wallet connection rate</span></div>
+    <div class="ab-panel winner"><div class="ab-heading"><span class="ab-letter">B</span><span class="ab-win-tag">Winner</span></div><h5>"Join 1,400+ investors earning 8.4% APY today"</h5><ul><li>Live depositor count + TVL ticker in hero</li><li>Audit badge (Trail of Bits) + Nexus Mutual cover reference</li><li>One-line risk qualifier beneath CTA</li><li>4,200 unique visitors</li></ul><span class="metric-big">9.8%</span><span style="font-size:12px; color:var(--ink-light);">Wallet connection rate</span></div>
+  </div>
+
+  <div class="animate-in visible"><div class="insight steel"><span class="insight-kicker steel">A/B Test Result</span><p>Variant B delivered a <strong>+60.7% relative lift</strong> in wallet connection rate (6.1% to 9.8%). Statistical significance was 96.2% (approx.), calculated via a two-proportion z-test at 80% power. The test ran for 11 days to reach minimum detectable effect threshold. We shipped Variant B globally; the lift held across a 30-day observation window, confirming it was not novelty-driven.</p></div>
+
+    <h3>Growth Initiative: Liquidity Mining + Referral Programme</h3>
+    <p>Six weeks post-launch I designed a dual-track growth programme. Track one was a <strong>targeted liquidity mining incentive</strong>: users who deposited over $1,000 and held for 30 days earned PRIME governance tokens at a rate equivalent to roughly 3% additional APY (approx.). The rate was deliberately conservative, designed to reward genuine believers rather than attract mercenary capital that would exit the moment emissions slowed.</p>
+    <p>Track two was an <strong>on-chain referral programme</strong> with real economic alignment: every referral generated a 0.05% annual fee rebate for the referrer on the referred wallet's deposits, paid in PRIME tokens for the first 12 months. This created a compounding incentive to bring in friends who would stay, not just transact once. The top 50 referrers by volume drove 31% of total platform TVL across months two and three (approx.).</p>
+
+    <div class="stat-band"><div class="stat-cell"><span class="sc-label">TVL at Launch</span><span class="sc-val">$0.8M</span><span class="sc-delta up">Baseline Week 1</span></div><div class="stat-cell"><span class="sc-label">TVL at 60 Days</span><span class="sc-val">$6.1M</span><span class="sc-delta up">+662% cumulative</span></div><div class="stat-cell"><span class="sc-label">TVL at 90 Days</span><span class="sc-val">$14.2M</span><span class="sc-delta up">Peak achieved</span></div></div>
+  </div>
+
+  <div class="chapter animate-in visible" id="s6"><div class="chapter-inner"><div class="chapter-num">06</div><div class="chapter-text"><span class="chapter-eyebrow">Chapter Six</span><h2 class="chapter-title">Results &amp; Business Impact</h2></div></div><div class="chapter-rule"></div></div>
+  <div class="animate-in visible"><div class="result-box"><p>TVL grew from <strong>$0.8M at launch to $14.2M at the 90-day mark</strong>, an approximately 17.75x increase achieved during a period when DeFi aggregate TVL across all chains declined by roughly 19% (per DeFiLlama, June to September 2022). We grew in a bear market by owning a user segment the established protocols had ignored: the cautious, first-time retail depositor who wanted yield without the complexity.</p></div>
+    <div class="stat-band"><div class="stat-cell"><span class="sc-label">30-Day Retention</span><span class="sc-val">61%</span><span class="sc-delta up">from 24% at launch</span></div><div class="stat-cell"><span class="sc-label">90-Day Retention</span><span class="sc-val">39%</span><span class="sc-delta up">from 11% in beta</span></div><div class="stat-cell"><span class="sc-label">Avg. Deposit Size</span><span class="sc-val">$3.1K</span><span class="sc-delta up">vs. $1.2K in beta</span></div></div>
+    <h3>Market Context</h3>
+    <p>The 90-day growth window spanned June to September 2022, covering the aftermath of the LUNA collapse, the Three Arrows Capital insolvency, and a sustained Ethereum bear market that saw ETH fall approximately 40% from its May 2022 high. When ETH dropped 28% in a single July week, Anchor Vault declined only 4.1% (approx.) due to its stablecoin-heavy allocation. I pushed the communications lead to issue a plain-English explainer to all depositors within four hours of the drawdown beginning. Our withdrawal rate that week was 7%, versus an estimated industry average of 19-23% across comparable DeFi vaults (approx.).</p>
+    <h3>Qualitative Wins</h3>
+  </div>
+  <div class="testimonial animate-in visible"><p>I have tried five DeFi platforms and every time I either got confused or lost money to gas fees before I even deposited. PrimeVault is the first time I actually put money in, forgot about it for a month, and came back to find I had earned yield and the risk score was still green. That is exactly what I was hoping for.</p><cite>User testimonial, Anchor Vault depositor</cite></div>
+  <div class="testimonial animate-in visible"><p>The risk quiz is genuinely clever. It recommended Apex Vault for me and it felt like the product had actually understood my profile. Every other DeFi product just dumps options on you and hopes you make the right call.</p><cite>User testimonial, Apex Vault depositor</cite></div>
+  <div class="animate-in visible"><p>Support ticket volume fell <strong>68%</strong> (approx.) between the original beta design and the post-zap-in, redesigned experience. The top three ticket categories before the redesign were: "I approved but my deposit did not go through," "why did gas cost more than I expected," and "how do I know which vault to choose." All three were structurally eliminated by the design and engineering decisions in Section 3.</p>
+    <p>CoinDesk and The Defiant both covered PrimeVault in their DeFi product roundups in August 2022, citing the risk quiz and on-chain gas batching as genuinely differentiated UX patterns for the category. A16z Crypto's newsletter cited our gas-bleed analysis as a reference benchmark for understanding retail DeFi adoption barriers.</p>
+  </div>
+
+  <div class="chapter animate-in visible" id="s7"><div class="chapter-inner"><div class="chapter-num">07</div><div class="chapter-text"><span class="chapter-eyebrow">Chapter Seven</span><h2 class="chapter-title">Key Learnings &amp; Transferable Insights</h2></div></div><div class="chapter-rule"></div></div>
+  <div class="animate-in visible"><h3>What I Would Do Differently</h3>
+    <ul class="learn-list"><li><div class="learn-num">01</div><div class="learn-text"><strong>Audit the aggressive vault in parallel, not sequentially.</strong> I correctly prioritised the conservative vault for our first third-party security audit. But the aggressive vault launched with only an internal review, and we discovered a minor reentrancy edge case in month four that required an emergency migration. A concurrent external audit, even a lighter-touch one, would have caught it at a fraction of the reputational cost. Security reviews are not a feature to be scored on a RICE matrix; they are load-bearing infrastructure.</div></li>
+    <li><div class="learn-num">02</div><div class="learn-text"><strong>Invest in withdrawal UX as carefully as deposit UX.</strong> We allocated roughly 80% of our UX research and iteration effort to the deposit flow. When the bear market deepened and users wanted to exit, the withdrawal experience was notably worse by comparison. Retention data showed that users who experienced a friction-heavy withdrawal were 40% less likely to re-deposit within 90 days, even when market conditions improved. A smooth exit builds re-deposit trust.</div></li>
+    <li><div class="learn-num">03</div><div class="learn-text"><strong>Instrument intent, not only action.</strong> Our Dune dashboard told us precisely what users did on-chain, but it could not tell us where they hesitated, raged-clicked, or quietly abandoned a screen before connecting their wallet. I would invest in a session analytics layer for dApps from day one, integrating something like Hotjar or a custom event stream from the wallet interaction layer, to capture friction points that on-chain data cannot see.</div></li>
+    <li><div class="learn-num">04</div><div class="learn-text"><strong>Ship governance infrastructure alongside token distribution.</strong> We distributed PRIME governance tokens as liquidity mining incentives in month two but did not ship a governance interface until month six. Token holders felt unheard and disempowered, creating community friction at precisely the moment we needed goodwill. A minimal on-chain voting interface should have shipped the same week as the token.</div></li></ul>
+
+    <h3>Connecting DeFi Product Management to Traditional Fintech</h3>
+    <p>Building PrimeVault was operationally equivalent to designing a mutual fund SIP feature on a platform like Groww or Zerodha, with one additional layer of technical complexity. In both contexts, the PM's core job is identical: abstract a financial instrument behind a clean user decision, price the product to balance user value and business sustainability, instrument cohort retention to identify which users are compounding their relationship versus quietly disengaging, and manage a recurring investment experience that compounds trust over time. The DeFi version adds smart contract risk management, but conceptually this maps directly to <strong>settlement risk in traditional finance</strong>. Just as a payments PM on a UPI or RTGS system must define what happens when a transaction is confirmed on one leg but fails on the other, a DeFi PM must define what happens when a vault transaction is submitted to the mempool but fails due to insufficient gas, or when a keeper bot misses a rebalance trigger during a volatile price event. In both cases the PM is not writing the settlement or contract logic, but they own the failure mode definitions, the user communication for those failures, the retry and recovery paths, and the escalation triggers. The week I managed a failed rebalance event on Apex Vault and wrote the user communication within two hours, making sure no wallet was left with an ambiguous state and no user felt they had been silently abandoned, was structurally identical to a fintech PM handling a failed NACH mandate reversal or a delayed NEFT batch. The protocol stack is different; the product discipline is the same, and it transfers directly.</p>
+
+    <div class="insight steel"><span class="insight-kicker steel">Smart Contract Risk is Settlement Risk</span><p>In traditional finance, settlement risk is the danger that one leg of a bilateral transaction completes while the counterpart leg fails, leaving a party with an unintended exposure. In DeFi, a failed atomic transaction during a rebalance can carry the same structural risk profile: the vault may have successfully exited Position A but not yet entered Position B, leaving the portfolio in a temporarily imbalanced and over-exposed state. Managing this required me to write formal fallback specifications for oracle failures, define keeper bot redundancy thresholds, and design circuit-breaker conditions with the same rigour a fintech PM applies to a T+1 batch settlement fallback. The vocabulary is different. The discipline of defining edge cases, owning the failure specification, and protecting users from silent errors is identical, and that is precisely the muscle I bring to any financial infrastructure product role.</p></div>
+
+    
+  </div>
+
+  <div style="margin-top: 72px;"></div>
+  <footer><p>PrimeVault · Product Case Study · Confidential</p><p>Product Manager · 2022-2023</p></footer>
+
+</div>
+
+<script>
+  const animatables = document.querySelectorAll('.animate-in');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.06 });
+  animatables.forEach(el => io.observe(el));
+</script>
+
+</body></html>

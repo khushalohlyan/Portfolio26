@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<!-- saved from url=(0110)file:///C:/Users/khushal/Downloads/Smart%20EV%20Trip%20Planner%20%E2%80%93%20JLR%20Product%20Case%20Study.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart EV Trip Planner – JLR Product Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link href="./Smart EV Trip Planner – JLR Product Case Study_files/css2" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #f0f3f8;
+      --surface:    #ffffff;
+      --surface-2:  #f8fafd;
+      --navy:       #0c1a3a;
+      --navy-mid:   #1e3a6e;
+      --navy-light: #2d5299;
+      --blue:       #1a56db;
+      --blue-light: #dbeafe;
+      --green:      #059669;
+      --green-light:#d1fae5;
+      --amber:      #d97706;
+      --amber-light:#fef3c7;
+      --red:        #dc2626;
+      --red-light:  #fee2e2;
+      --slate:      #64748b;
+      --slate-light:#94a3b8;
+      --border:     #e2e8f0;
+      --border-dark:#c8d3e0;
+      --text:       #1e293b;
+      --text-mid:   #475569;
+      --text-light: #64748b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(30,58,110,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,58,110,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 28px 120px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 2px solid var(--navy);
+    }
+
+    .tb-left { display: flex; align-items: center; gap: 14px; }
+    .tb-logo { width: 36px; height: 36px; background: var(--navy); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .tb-logo svg { width: 20px; height: 20px; }
+    .tb-brand { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--navy); }
+    .tb-right { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--slate); letter-spacing: 0.04em; }
+
+    .hero {
+      padding: 64px 0 56px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    @media (max-width: 640px) { .hero { grid-template-columns: 1fr; } }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 3px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span { color: var(--blue); }
+    .hero-desc { font-size: 15.5px; color: var(--text-mid); max-width: 560px; font-weight: 400; line-height: 1.7; }
+
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+    .htag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-weight: 500;
+      border: 1px solid;
+    }
+    .htag.blue  { color: var(--blue);  border-color: var(--blue);  background: var(--blue-light); }
+    .htag.green { color: var(--green); border-color: var(--green); background: var(--green-light); }
+    .htag.amber { color: var(--amber); border-color: var(--amber); background: var(--amber-light); }
+    .htag.red   { color: var(--red);   border-color: var(--red);   background: var(--red-light); }
+
+    .battery-widget {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 24px 22px;
+      min-width: 180px;
+      color: white;
+    }
+    .bw-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 14px; display: block; }
+    .bw-level { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 2.8rem; line-height: 1; color: #34d399; }
+    .bw-bar-wrap { background: rgba(255,255,255,0.1); border-radius: 3px; height: 6px; margin: 12px 0 16px; overflow: hidden; }
+    .bw-bar { height: 100%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 3px; width: 78%; animation: barFill 1.4s ease forwards; }
+    @keyframes barFill { from { width: 0; } to { width: 78%; } }
+    .bw-rows { display: flex; flex-direction: column; gap: 8px; }
+    .bw-row { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.55); }
+    .bw-row strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 40px 0 0;
+    }
+    @media (max-width: 580px) { .kpi-strip { grid-template-columns: 1fr 1fr; } }
+    .kpi { padding: 20px 20px; border-right: 1px solid var(--border); }
+    .kpi:last-child { border-right: none; }
+    .kpi-lbl { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--slate-light); display: block; margin-bottom: 6px; }
+    .kpi-val { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 1.8rem; color: var(--navy); line-height: 1; }
+    .kpi-note { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 4px; display: block; }
+    .kpi-note.amber { color: var(--amber); }
+
+    .sec-head { margin: 72px 0 36px; }
+    .sec-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); display: block; margin-bottom: 10px; }
+    .sec-head h2 { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.15; color: var(--navy); letter-spacing: -0.01em; border-left: 4px solid var(--blue); padding-left: 16px; }
+    .sec-head h2.green { border-left-color: var(--green); }
+    .sec-head h2.amber { border-left-color: var(--amber); }
+    .sec-head h2.red   { border-left-color: var(--red); }
+    .sec-rule { height: 1px; background: var(--border-dark); margin-top: 24px; }
+
+    p { color: var(--text-mid); font-size: 15px; margin-bottom: 18px; line-height: 1.8; }
+    strong { color: var(--text); font-weight: 600; }
+    h3 { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin: 32px 0 12px; letter-spacing: -0.01em; }
+
+    .card { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 24px 26px; margin: 24px 0; }
+    .card.blue-accent  { border-top: 3px solid var(--blue); }
+    .card.green-accent { border-top: 3px solid var(--green); }
+    .card.amber-accent { border-top: 3px solid var(--amber); }
+    .card.navy-accent  { border-top: 3px solid var(--navy); }
+    .card-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 12px; display: block; font-weight: 500; }
+    .card-label.blue  { color: var(--blue); }
+    .card-label.green { color: var(--green); }
+    .card-label.amber { color: var(--amber); }
+    .card-label.navy  { color: var(--navy-mid); }
+
+    .driver-quote { background: var(--navy); border-radius: 8px; padding: 28px 32px; margin: 28px 0; position: relative; overflow: hidden; }
+    .driver-quote::before { content: '\201C'; position: absolute; top: -12px; right: 20px; font-family: 'Inter', system-ui, sans-serif; font-size: 8rem; font-weight: 800; color: rgba(255,255,255,0.05); line-height: 1; }
+    .driver-quote blockquote { font-size: 1.05rem; font-style: italic; color: rgba(255,255,255,0.85); line-height: 1.65; margin-bottom: 10px; }
+    .driver-quote cite { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #34d399; font-style: normal; }
+
+    .dt { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 24px 0; background: var(--surface); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-dark); }
+    .dt thead tr { background: var(--navy); }
+    .dt th { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.6); padding: 12px 16px; text-align: left; font-weight: 500; }
+    .dt td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: top; line-height: 1.55; }
+    .dt td:first-child { color: var(--text); font-weight: 500; }
+    .dt tbody tr:last-child td { border-bottom: none; }
+    .dt tbody tr:hover td { background: var(--surface-2); }
+
+    .tag-green { background: var(--green-light); color: var(--green); padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .tag-amber { background: var(--amber-light); color: var(--amber); padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .tag-blue  { background: var(--blue-light);  color: var(--blue);  padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .tag-red   { background: var(--red-light);   color: var(--red);   padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+
+    .sql-block { background: #0f172a; border-radius: 8px; overflow: hidden; margin: 24px 0; }
+    .sql-header { background: #1e293b; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .sql-header .sql-title { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #34d399; font-weight: 500; }
+    .sql-dots { display: flex; gap: 5px; }
+    .sql-dots span { width: 8px; height: 8px; border-radius: 50%; }
+    .sql-dots span:nth-child(1) { background: #ef4444; }
+    .sql-dots span:nth-child(2) { background: #f59e0b; }
+    .sql-dots span:nth-child(3) { background: #22c55e; }
+    .sql-body { padding: 20px 22px; overflow-x: auto; }
+    .sql-body pre { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.9; color: #e2e8f0; white-space: pre-wrap; }
+    .kw  { color: #7dd3fc; }
+    .fn  { color: #c084fc; }
+    .str { color: #86efac; }
+    .cmt { color: #475569; font-style: italic; }
+    .num { color: #fbbf24; }
+    .op  { color: #94a3b8; }
+
+    .journey-map { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 28px 24px; margin: 24px 0; overflow-x: auto; }
+    .jm-title { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--slate); margin-bottom: 24px; display: block; }
+    .jm-phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; min-width: 560px; }
+    .jm-phase { border-right: 1px solid var(--border); padding: 0 16px 0 0; margin-right: 16px; }
+    .jm-phase:last-child { border-right: none; padding: 0; margin-right: 0; }
+    .jm-phase-name { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--navy); margin-bottom: 12px; display: block; }
+    .jm-touchpoint { font-size: 11px; background: var(--blue-light); color: var(--navy-mid); border-radius: 4px; padding: 5px 8px; margin-bottom: 6px; font-weight: 500; }
+    .jm-need { font-size: 11px; color: var(--text-mid); line-height: 1.5; margin-bottom: 6px; padding-left: 8px; border-left: 2px solid var(--border-dark); }
+    .jm-pain { font-size: 10px; background: var(--red-light); color: var(--red); border-radius: 4px; padding: 4px 8px; font-weight: 600; margin-top: 8px; }
+
+    .sus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+    @media (max-width: 540px) { .sus-grid { grid-template-columns: 1fr; } }
+    .sus-card { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 20px 22px; }
+    .sus-card h4 { font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .sus-score { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 2.5rem; line-height: 1; margin-bottom: 8px; }
+    .sus-bar-wrap { background: var(--border); border-radius: 3px; height: 8px; overflow: hidden; margin-bottom: 8px; }
+    .sus-bar { height: 100%; border-radius: 3px; }
+    .sus-desc { font-size: 12px; color: var(--slate); font-weight: 500; }
+
+    .ab-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+    @media (max-width: 540px) { .ab-wrap { grid-template-columns: 1fr; } }
+    .ab-card { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; padding: 22px 22px; }
+    .ab-card.winner { border-color: var(--green); background: #f0fdf4; }
+    .ab-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; font-weight: 500; display: inline-block; margin-bottom: 12px; }
+    .ab-tag.control { background: var(--bg); color: var(--slate); border: 1px solid var(--border-dark); }
+    .ab-tag.variant { background: var(--green-light); color: var(--green); border: 1px solid var(--green); }
+    .ab-card h5 { font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 14px; line-height: 1.35; }
+    .ab-card ul { list-style: none; padding: 0; margin-bottom: 14px; }
+    .ab-card ul li { font-size: 12.5px; color: var(--text-mid); padding: 5px 0; border-bottom: 1px dashed var(--border); line-height: 1.5; }
+    .ab-card ul li:last-child { border: none; }
+    .ab-metric { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 2rem; line-height: 1; }
+    .ab-metric.ctrl   { color: var(--amber); }
+    .ab-metric.winner { color: var(--green); }
+    .ab-metric-label { font-size: 11px; color: var(--slate); margin-top: 4px; display: block; }
+
+    .rice-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 24px 0; background: var(--surface); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-dark); }
+    .rice-table thead tr { background: var(--navy); }
+    .rice-table th { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.55); padding: 12px 16px; text-align: left; }
+    .rice-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: middle; }
+    .rice-table td:first-child { color: var(--text); font-weight: 500; }
+    .rice-table tbody tr:last-child td { border-bottom: none; }
+    .rice-table tbody tr:hover td { background: var(--surface-2); }
+    .rice-score { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 15px; padding: 3px 10px; border-radius: 4px; display: inline-block; }
+    .rice-high   { background: var(--green-light); color: var(--green); }
+    .rice-medium { background: var(--amber-light); color: var(--amber); }
+    .rice-low    { background: var(--red-light);   color: var(--red); }
+
+    .us-box { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; overflow: hidden; margin: 24px 0; }
+    .us-header { background: var(--navy); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .us-header span { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+    .us-id { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #7dd3fc; font-weight: 500; }
+    .us-body { padding: 20px 22px; }
+    .us-body p { font-size: 14px; line-height: 1.7; margin-bottom: 10px; }
+    .ac-list { list-style: none; padding: 0; margin-top: 14px; border-top: 1px solid var(--border); padding-top: 14px; }
+    .ac-list li { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 13px; color: var(--text-mid); line-height: 1.55; border-bottom: 1px dashed var(--border); }
+    .ac-list li:last-child { border: none; }
+    .ac-pill { flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--blue-light); color: var(--blue); padding: 2px 6px; border-radius: 3px; margin-top: 3px; font-weight: 500; }
+
+    .sprint-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+    @media (max-width: 580px) { .sprint-grid { grid-template-columns: 1fr; } }
+    .sprint-col { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; overflow: hidden; }
+    .sprint-col-head { padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; border-bottom: 1px solid var(--border); }
+    .sprint-col-head.todo   { color: var(--slate); background: var(--surface-2); }
+    .sprint-col-head.doing  { color: var(--blue);  background: var(--blue-light); }
+    .sprint-col-head.done   { color: var(--green); background: var(--green-light); }
+    .sprint-item { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-mid); line-height: 1.45; }
+    .sprint-item:last-child { border: none; }
+    .sprint-item strong { color: var(--text); font-weight: 600; font-size: 11px; display: block; margin-bottom: 3px; }
+    .sprint-pts { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--slate-light); margin-top: 4px; display: block; }
+
+    .result-band { background: var(--navy); border-radius: 8px; padding: 32px 32px; margin: 28px 0; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; }
+    @media (max-width: 560px) { .result-band { grid-template-columns: 1fr; gap: 20px; } }
+    .rb-cell { padding-right: 24px; border-right: 1px solid rgba(255,255,255,0.1); margin-right: 24px; }
+    .rb-cell:last-child { border: none; padding: 0; margin: 0; }
+    .rb-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.4); display: block; margin-bottom: 8px; }
+    .rb-val { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 2.2rem; color: #34d399; line-height: 1; }
+    .rb-note { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 6px; display: block; }
+
+    .highlight { background: var(--surface); border-left: 4px solid var(--blue); padding: 18px 22px; border-radius: 0 6px 6px 0; margin: 20px 0; box-shadow: 2px 2px 0 var(--blue-light); }
+    .highlight.green { border-left-color: var(--green); box-shadow: 2px 2px 0 var(--green-light); }
+    .highlight.amber { border-left-color: var(--amber); box-shadow: 2px 2px 0 var(--amber-light); }
+    .highlight-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; display: block; color: var(--blue); font-weight: 500; }
+    .highlight-label.green { color: var(--green); }
+    .highlight-label.amber { color: var(--amber); }
+    .highlight p { font-size: 14px; margin: 0; }
+
+    .learn-list { list-style: none; padding: 0; margin: 20px 0; }
+    .learn-list li { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .learn-list li:last-child { border: none; }
+    .l-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--blue-light); border: 1px solid var(--blue); color: var(--blue); font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .l-icon.green { background: var(--green-light); border-color: var(--green); color: var(--green); }
+    .l-body { font-size: 14.5px; color: var(--text-mid); line-height: 1.7; }
+    .l-body strong { color: var(--text); }
+
+    sup.ap { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--slate-light); letter-spacing: 0.06em; }
+
+    .divider { height: 1px; background: var(--border-dark); margin: 56px 0; }
+    footer { border-top: 2px solid var(--navy); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    footer p { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--slate); letter-spacing: 0.06em; margin: 0; }
+
+    .fade-up { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .fade-up.vis { opacity: 1; transform: translateY(0); }
+
+    .tableau-mock { background: var(--surface); border: 1px solid var(--border-dark); border-radius: 8px; overflow: hidden; margin: 24px 0; }
+    .tm-header { background: #1d2d50; padding: 12px 20px; display: flex; align-items: center; gap: 10px; }
+    .tm-header span { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+    .tm-dot { width: 8px; height: 8px; border-radius: 50%; background: #e07b39; }
+    .tm-body { padding: 20px; }
+    .tm-charts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    @media (max-width: 560px) { .tm-charts { grid-template-columns: 1fr; } }
+    .tm-chart { background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 14px; }
+    .tm-chart-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--slate); margin-bottom: 12px; display: block; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 5px; height: 64px; }
+    .bc-bar { flex: 1; border-radius: 3px 3px 0 0; transition: height 0.8s ease; }
+    .bc-bar.blue  { background: var(--blue); }
+    .bc-bar.green { background: var(--green); }
+    .bc-bar.amber { background: var(--amber); }
+    .tm-stat { font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+    .tm-stat-sub { font-size: 11px; color: var(--slate); }
+  </style>
+<style id="__web-inspector-hide-shortcut-style__">
+.__web-inspector-hide-shortcut__, .__web-inspector-hide-shortcut__ *
+{
+    visibility: hidden !important;
+}
+</style></head>
+<body>
+
+<div class="wrap ai-style-change-1">
+
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-logo">
+        <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#34d399" stroke-width="1.5"></circle><path d="M10 3v7l4 4" stroke="#7dd3fc" stroke-width="1.5" stroke-linecap="round"></path></svg>
+      </div>
+      <span class="tb-brand">Smart EV Trip Planner · JLR</span>
+    </div>
+    <span class="tb-right">APM · Product Case Study · 10 Months</span>
+  </div>
+
+  <header class="hero fade-up vis">
+    <div>
+      <div class="hero-label">⚡ Product Case Study — Mobility &amp; Route Intelligence</div>
+      <h1>Smart EV Trip Planner:<br>A Data-Driven,<br><span>Multimodal Journey</span><br>Optimisation Feature</h1>
+      <p class="hero-desc">How I built an energy-aware route intelligence engine for Jaguar Land Rover that reduced range anxiety from the #1 EV adoption barrier into a solved product problem, and why the PM skills it demanded transfer directly to travel tech, mapping, energy, and IoT.</p>
+      <div class="hero-tags">
+        <span class="htag blue">Mobility Tech</span>
+        <span class="htag green">Route Optimisation</span>
+        <span class="htag amber">HCI Research</span>
+        <span class="htag red">EV Infrastructure</span>
+      </div>
+
+      <div class="kpi-strip">
+        <div class="kpi"><span class="kpi-lbl">Trip Success Rate</span><span class="kpi-val">91%</span><span class="kpi-note">from 67% baseline</span></div>
+        <div class="kpi"><span class="kpi-lbl">SUS Score (v2)</span><span class="kpi-val">84.2</span><span class="kpi-note">Grade A usability</span></div>
+        <div class="kpi"><span class="kpi-lbl">Charger Adherence</span><span class="kpi-val">79%</span><span class="kpi-note amber">from 41% control</span></div>
+        <div class="kpi"><span class="kpi-lbl">Range Anxiety Score</span><span class="kpi-val">44%</span><span class="kpi-note">post-launch survey</span></div>
+      </div>
+    </div>
+
+    <div class="battery-widget">
+      <span class="bw-label">Current Charge</span>
+      <div class="bw-level">78%</div>
+      <div class="bw-bar-wrap"><div class="bw-bar"></div></div>
+      <div class="bw-rows">
+        <div class="bw-row"><span>Range</span><strong>247 mi</strong></div>
+        <div class="bw-row"><span>Trip dist.</span><strong>198 mi</strong></div>
+        <div class="bw-row"><span>Buffer</span><strong>49 mi</strong></div>
+        <div class="bw-row"><span>Stops needed</span><strong>1</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="sec-head fade-up vis" id="s1">
+    <span class="sec-num">01 · Problem Discovery</span>
+    <h2>Range Anxiety is a Data Problem,<br>Not a Battery Problem</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="fade-up vis">
+    <p>When I joined JLR's connected services team in 2022, the company had just launched its first fully electric platform. The hardware was genuinely competitive: 300-plus miles of real-world range, fast-charge capability, and excellent thermal management. Yet post-purchase survey data showed that <strong>range anxiety remained the single most cited barrier to customer satisfaction</strong>, rated 4.1 out of 5 in severity by I-PACE and early Defender PHEV owners.</p>
+    <p>The problem was not the battery. It was the information system around the battery. Existing in-car navigation treated battery state as a static variable: it showed remaining range as a circle on a map and offered a single "nearest charger" recommendation. It did not account for elevation change, traffic-induced energy drain, charger occupancy, dynamic electricity pricing, or the driver's personal comfort threshold for arriving with a low state of charge. It treated a fundamentally dynamic, multi-variable logistics problem as a simple distance calculation.</p>
+
+    <div class="driver-quote">
+      <blockquote>I do not want to know that I have 180 miles of range. I want to know if I can make it to my in-laws in Sheffield, accounting for the M1 at 70 mph, the hills, and the fact that I want to arrive with at least 20% charge so I do not spend the whole drive panicking. That is not what the current system tells me.</blockquote>
+      <cite>Composite user quote drawn from 12 discovery interviews</cite>
+    </div>
+
+    <p>The insight that reframed the entire product brief: <strong>range anxiety is a decision support failure, not a hardware failure.</strong> Users already had enough range for most of their actual journeys. What they lacked was a planning interface that helped them trust that range confidently. This positioned the problem as a data and UX problem, directly analogous to how a travel booking platform like Skyscanner helps a traveller trust a layover connection time, or how a logistics platform gives a driver confidence in a delivery window. The PM skills required were not automotive-specific. They were universal.</p>
+
+    <h3>The Opportunity Space</h3>
+
+    <table class="dt fade-up vis">
+      <thead><tr><th>Problem Dimension</th><th>Current State</th><th>Target State</th><th>Analogous Domain</th></tr></thead>
+      <tbody>
+        <tr><td>Range estimation</td><td>Static, EPA-rated range displayed as single number</td><td>Dynamic, real-time estimate accounting for speed, weather, HVAC, elevation</td><td>Flight ETAs adjusted for headwinds (aviation software)</td></tr>
+        <tr><td>Charger selection</td><td>Nearest charger by distance only</td><td>Optimal charger by time cost, price, occupancy probability, network compatibility</td><td>Hotel booking sorted by value score (travel tech)</td></tr>
+        <tr><td>Itinerary planning</td><td>No multi-stop energy planning</td><td>Holistic route plan that balances time, cost, and arrival SoC preference</td><td>Multi-city trip builder (Google Trips, Rome2Rio)</td></tr>
+        <tr><td>Driver preference</td><td>No personalisation or learned behaviour</td><td>Profile-aware planning (conservative vs. efficient vs. fast-charge priority)</td><td>Waze preferred route learning, Spotify Discover Weekly</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head fade-up vis" id="s2">
+    <span class="sec-num">02 · User Research &amp; HCI</span>
+    <h2 class="green">Human-Centred Design Across<br>Four Touchpoints</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="fade-up vis">
+    <h3>Research Methodology</h3>
+    <p>I designed and led a three-phase research programme. Phase one was <strong>12 moderated discovery interviews</strong> conducted via video and two in-home sessions with I-PACE owners, using a semi-structured discussion guide. Phase two was a <strong>contextual inquiry study</strong>: four participants drove a defined 140-mile route while I observed and noted every moment they checked the battery display or expressed uncertainty. Phase three was <strong>Figma prototype usability testing</strong> with 18 participants using think-aloud protocol and System Usability Scale scoring.</p>
+
+    <h3>User Segmentation</h3>
+
+    <table class="dt">
+      <thead><tr><th>Segment</th><th>Profile</th><th>Primary Need</th><th>Risk Tolerance</th></tr></thead>
+      <tbody>
+        <tr><td>Range Anxious</td><td>New EV owners, 40-62 yr, frequent motorway drivers, first-year ownership</td><td>Conservative planning with generous arrival buffer (min. 25% SoC)</td><td>Very low; prefers extra charging stop over uncertainty</td></tr>
+        <tr><td>Efficiency Maximisers</td><td>Tech-forward owners, 28-45 yr, commute plus weekends, sustainability-motivated</td><td>Cheapest charging stops, time-of-use tariff awareness, carbon tracking</td><td>Medium; comfortable with 10% arrival buffer if cost is minimised</td></tr>
+        <tr><td>Time-Critical Drivers</td><td>Business users, 35-55 yr, fixed meeting schedules, company-car drivers</td><td>Fastest possible route including fastest charger, not cheapest</td><td>High; willing to pay premium for rapid charge if it saves 20 minutes</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Think-Aloud Protocol: Key Findings</h3>
+    <p>During think-aloud sessions with the existing navigation prototype, participants verbalised the following behaviours that we captured as design requirements:</p>
+
+    <ul class="learn-list">
+      <li><div class="l-icon">01</div><div class="l-body"><strong>The "Good Enough" Override Problem:</strong> 11 of 18 participants dismissed the system-recommended charger and manually searched for alternatives because they did not trust the system's recommendation. The system showed the nearest charger; participants wanted the best charger for their specific situation. Trust was absent because the recommendation had no explanation.</div></li>
+      <li><div class="l-icon">02</div><div class="l-body"><strong>The Arrival Anxiety Spike:</strong> All 4 contextual inquiry participants showed measurably increased check frequency on the battery display in the final 40 miles of a route when estimated range margin fell below 30 miles. This corroborated survey data showing anxiety peaks in the final third of a journey, not at departure. The insight: the planning interface must give users a continuous confidence signal throughout the journey, not just a pre-trip recommendation.</div></li>
+      <li><div class="l-icon">03</div><div class="l-body"><strong>The Cost Blindspot:</strong> Zero out of 12 discovery interview participants could accurately estimate what their last charging session cost. Users were making stop decisions with no pricing information. This represented a direct product gap: integrating real-time tariff data into the route planner was both technically feasible and clearly valued by the Efficiency Maximiser segment.</div></li>
+    </ul>
+
+    <h3>Customer Journey Map</h3>
+    <p>I mapped the end-to-end journey across four touchpoints: home planning, in-car head unit, charging station, and post-trip review. Each phase had distinct needs and failure modes:</p>
+  </div>
+
+  <div class="journey-map fade-up vis">
+    <span class="jm-title">Customer Journey · Smart EV Trip Planner · End-to-End Touchpoints</span>
+    <div class="jm-phases">
+      <div class="jm-phase"><span class="jm-phase-name">Home Planning</span><div class="jm-touchpoint">Mobile App</div><div class="jm-need">Set destination, departure time, and minimum arrival SoC. View energy cost estimate. Pre-condition battery remotely.</div><div class="jm-need">Share trip plan with in-car system via cloud sync before entering vehicle.</div><div class="jm-pain">Pain: No pre-trip planner in app. User must rely on in-car system with no time to review options.</div></div>
+      <div class="jm-phase"><span class="jm-phase-name">In-Car (HMI)</span><div class="jm-touchpoint">Head Unit / HMI</div><div class="jm-need">See real-time range polygon updated for speed, HVAC, and elevation. Accept or modify recommended charger stops.</div><div class="jm-need">Receive proactive rerouting if traffic changes energy consumption projection.</div><div class="jm-pain">Pain: Static range circle with no scenario modelling. Charger recommendation not explained. No pricing shown.</div></div>
+      <div class="jm-phase"><span class="jm-phase-name">At Charger</span><div class="jm-touchpoint">Charging Station + App</div><div class="jm-need">See estimated charge time to target SoC. View live pricing. Option to pay via in-app integrated wallet.</div><div class="jm-need">Notification when target SoC reached so driver can leave without waiting at vehicle.</div><div class="jm-pain">Pain: No integrated payment. No time-to-target-SoC display. Driver must return to vehicle to monitor.</div></div>
+      <div class="jm-phase"><span class="jm-phase-name">Post-Trip</span><div class="jm-touchpoint">App Summary</div><div class="jm-need">View trip energy efficiency, total charging cost, comparison to predicted vs. actual range.</div><div class="jm-need">System learns from deviation (if driver rejected a recommended stop) to improve future plans.</div><div class="jm-pain">Pain: No post-trip summary or learning loop. System treats every trip as a first-time event.</div></div>
+    </div>
+  </div>
+
+  <div class="fade-up vis">
+    <h3>Usability Testing: SUS Scoring Results</h3>
+    <p>I ran two rounds of moderated usability testing using Figma prototypes: Round 1 tested the existing navigation interface (baseline), and Round 2 tested the Smart Trip Planner prototype with 18 participants each. Participants completed three task scenarios and completed a 10-item System Usability Scale questionnaire after each session.</p>
+
+    <div class="sus-grid">
+      <div class="sus-card"><h4>Baseline Navigation (Round 1)</h4><div class="sus-score" style="color: var(--red);">51.3</div><div class="sus-bar-wrap"><div class="sus-bar" style="width: 51.3%; background: var(--red);"></div></div><span class="sus-desc">Grade F · Below acceptable threshold (68). Users reported difficulty understanding charger recommendations and felt anxious about range adequacy.</span></div>
+      <div class="sus-card"><h4>Smart Trip Planner (Round 2)</h4><div class="sus-score" style="color: var(--green);">84.2</div><div class="sus-bar-wrap"><div class="sus-bar" style="width: 84.2%; background: var(--green);"></div></div><span class="sus-desc">Grade A · Exceeds "Excellent" threshold (80.3). Top gains in learnability (+31 pts) and confidence in recommendations (+28 pts).</span></div>
+    </div>
+
+    <div class="highlight">
+      <span class="highlight-label">Usability Research Finding</span>
+      <p>The largest single SUS improvement between Round 1 and Round 2 came from adding a plain-language explanation beneath the recommended charger stop: "Recommended because it is on your route, has 3 of 4 bays available, and saves you 18 minutes vs. the nearest alternative." Users who saw this explanation accepted the recommendation at a 79% rate, versus 34% for the unexplained recommendation. This became Acceptance Criteria 3 in the core PRD and was shipped in Sprint 2.</p>
+    </div>
+  </div>
+
+  <div class="sec-head fade-up vis" id="s3">
+    <span class="sec-num">03 · Data &amp; Analytics</span>
+    <h2 class="amber">Telemetry Queries, Tableau Dashboards,<br>and the A/B Test That Validated the Core Bet</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="fade-up vis">
+    <h3>Vehicle Telemetry Analysis: Finding Range Anxiety Hotspots</h3>
+    <p>The connected vehicle platform emitted anonymised, aggregated telemetry events per trip. I worked with the data engineering team to model a schema representing trip segments, and wrote a series of SQL queries to identify which route corridors and trip profiles were most associated with unplanned charging stops, which we defined as a stop not within 1.2 miles of a pre-route charger.</p>
+  </div>
+
+  <div class="sql-block fade-up vis">
+    <div class="sql-header"><div class="sql-dots"><span></span><span></span><span></span></div><span class="sql-title">Query 1 · Unplanned Charging Stops by Route Corridor</span></div>
+    <div class="sql-body">
+<pre><span class="kw">WITH</span> trip_segments <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    trip_id,
+    vehicle_id,
+    segment_id,
+    start_soc_pct,
+    end_soc_pct,
+    distance_km,
+    avg_speed_kmh,
+    elevation_gain_m,
+    ambient_temp_c,
+    hvac_draw_kw,
+    grid_ref_start,           <span class="cmt">-- H3 hexagon index for spatial grouping</span>
+    planned_stop_flag
+  <span class="kw">FROM</span> telemetry.trip_segments
+  <span class="kw">WHERE</span> trip_date <span class="kw">BETWEEN</span> <span class="str">'2022-06-01'</span> <span class="kw">AND</span> <span class="str">'2022-12-31'</span>
+    <span class="kw">AND</span> distance_km <span class="op">&gt;</span> <span class="num">80</span>          <span class="cmt">-- Only long-haul trips where range matters</span>
+),
+unplanned_stops <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    cs.trip_id,
+    cs.charger_lat,
+    cs.charger_lon,
+    cs.stop_timestamp,
+    ts.grid_ref_start,
+    ts.end_soc_pct            <span class="kw">AS</span> soc_at_stop
+  <span class="kw">FROM</span> telemetry.charging_stops cs
+  <span class="kw">JOIN</span> trip_segments ts <span class="kw">ON</span> cs.trip_id = ts.trip_id
+  <span class="kw">WHERE</span> cs.planned_stop_flag = <span class="num">0</span>
+    <span class="kw">AND</span> cs.soc_at_stop_pct <span class="op">&lt;</span> <span class="num">18</span>   <span class="cmt">-- Stop with critically low charge (anxiety event)</span>
+)
+<span class="kw">SELECT</span>
+  grid_ref_start                        <span class="kw">AS</span> route_hex,
+  <span class="fn">COUNT</span>(*)                              <span class="kw">AS</span> unplanned_stop_count,
+  <span class="fn">AVG</span>(soc_at_stop)                       <span class="kw">AS</span> avg_soc_at_unplanned_stop,
+  <span class="fn">COUNT</span>(*) * <span class="num">1.0</span> <span class="op">/</span> <span class="fn">COUNT</span>(<span class="kw">DISTINCT</span> trip_id) <span class="kw">AS</span> stops_per_trip_ratio
+<span class="kw">FROM</span> unplanned_stops
+<span class="kw">GROUP BY</span> grid_ref_start
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) <span class="op">&gt;=</span> <span class="num">10</span>
+<span class="kw">ORDER BY</span> unplanned_stop_count <span class="kw">DESC</span>
+<span class="kw">LIMIT</span> <span class="num">25</span>
+<span class="cmt">-- Maps to Tableau hex choropleth: anxiety hotspot corridors by H3 cell</span></pre>
+    </div>
+  </div>
+
+  <div class="sql-block fade-up vis">
+    <div class="sql-header"><div class="sql-dots"><span></span><span></span><span></span></div><span class="sql-title">Query 2 · Range Prediction Accuracy by Segment Conditions</span></div>
+    <div class="sql-body">
+<pre><span class="kw">SELECT</span>
+  <span class="fn">CASE</span>
+    <span class="kw">WHEN</span> avg_speed_kmh <span class="op">&lt;</span> <span class="num">80</span>  <span class="kw">THEN</span> <span class="str">'Urban / Slow'</span>
+    <span class="kw">WHEN</span> avg_speed_kmh <span class="op">&lt;</span> <span class="num">110</span> <span class="kw">THEN</span> <span class="str">'Motorway Cruise'</span>
+    <span class="kw">ELSE</span>                          <span class="str">'High-Speed (&gt;110)'</span>
+  <span class="kw">END</span>                                     <span class="kw">AS</span> speed_band,
+  <span class="fn">ROUND</span>(<span class="fn">AVG</span>(ambient_temp_c))              <span class="kw">AS</span> avg_temp_c,
+  <span class="fn">AVG</span>(predicted_range_km)                 <span class="kw">AS</span> predicted_range_km,
+  <span class="fn">AVG</span>(actual_range_km)                    <span class="kw">AS</span> actual_range_km,
+  <span class="fn">AVG</span>(actual_range_km - predicted_range_km)<span class="kw">AS</span> prediction_error_km,
+  <span class="fn">STDDEV</span>(actual_range_km - predicted_range_km) <span class="kw">AS</span> error_stddev,
+  <span class="fn">COUNT</span>(*)                                <span class="kw">AS</span> segment_count
+<span class="kw">FROM</span> telemetry.trip_segments
+<span class="kw">WHERE</span> predicted_range_km <span class="op">IS NOT NULL</span>
+<span class="kw">GROUP BY</span> <span class="num">1</span>
+<span class="kw">ORDER BY</span> <span class="fn">ABS</span>(<span class="fn">AVG</span>(actual_range_km - predicted_range_km)) <span class="kw">DESC</span>
+<span class="cmt">-- Reveals that high-speed motorway driving under-predicted actual consumption by avg 31 km</span></pre>
+    </div>
+  </div>
+
+  <div class="fade-up vis">
+    <div class="highlight amber">
+      <span class="highlight-label amber">Telemetry Insight That Reframed Engineering Scope</span>
+      <p>The range prediction accuracy query revealed that at motorway speeds above 110 km/h, the existing EPA-based range model <strong>over-predicted range by an average of 31 km</strong>. This single finding was the data justification for building a real-time, physics-based range model that ingested live speed, temperature, HVAC draw, and elevation data. It also explained why anxious users on the M1 were chronically panicking: the system was telling them they had more range than they actually did.</p>
+    </div>
+
+    <h3>Tableau Dashboard: Product Team Monitoring</h3>
+    <p>I built a Tableau dashboard for the product and engineering teams to monitor three core operational metrics post-launch. The dashboard refreshed daily from the data warehouse and was the source of truth for sprint review discussions.</p>
+  </div>
+
+  <div class="tableau-mock fade-up vis">
+    <div class="tm-header"><div class="tm-dot"></div><span>Tableau · Smart EV Trip Planner · Product Dashboard · Live</span></div>
+    <div class="tm-body">
+      <div class="tm-charts">
+        <div class="tm-chart"><span class="tm-chart-label">Trip Completion Rate (Weekly)</span><div class="bar-chart"><div class="bc-bar blue" style="height:52%"></div><div class="bc-bar blue" style="height:58%"></div><div class="bc-bar blue" style="height:61%"></div><div class="bc-bar blue" style="height:67%"></div><div class="bc-bar green" style="height:74%"></div><div class="bc-bar green" style="height:79%"></div><div class="bc-bar green" style="height:85%"></div><div class="bc-bar green" style="height:91%"></div></div><div class="tm-stat" style="margin-top:10px;">91%</div><span class="tm-stat-sub">Current · +24pp vs. baseline</span></div>
+        <div class="tm-chart"><span class="tm-chart-label">Charger Stop Adherence</span><div class="bar-chart"><div class="bc-bar amber" style="height:41%"></div><div class="bc-bar amber" style="height:44%"></div><div class="bc-bar amber" style="height:50%"></div><div class="bc-bar blue" style="height:60%"></div><div class="bc-bar blue" style="height:66%"></div><div class="bc-bar green" style="height:71%"></div><div class="bc-bar green" style="height:76%"></div><div class="bc-bar green" style="height:79%"></div></div><div class="tm-stat" style="margin-top:10px;">79%</div><span class="tm-stat-sub">Current · +38pp vs. control</span></div>
+        <div class="tm-chart"><span class="tm-chart-label">Post-Trip Satisfaction (CSAT)</span><div style="padding-top:8px;"><div class="tm-stat">4.4</div><span class="tm-stat-sub">out of 5.0 · from 3.1 baseline</span><div style="background:var(--border); border-radius:3px; height:8px; margin-top:12px; overflow:hidden;"><div style="background:var(--green); height:100%; width:88%; border-radius:3px;"></div></div><div style="font-size:11px; color:var(--slate); margin-top:6px;">88% would recommend</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fade-up vis">
+    <p>The dashboard also surfaced a retention cohort view (did drivers who used the smart planner on trip 1 continue using it on trips 2-5?) and a charger diversion heatmap showing which recommended stops had the highest rejection rates, feeding directly into the algorithm team's weekly prioritisation. Charger stops at motorway services with poor ratings were being rejected at 3x the rate of standalone rapid chargers, informing our data partnership strategy with Zap-Map.</p>
+
+    <h3>A/B Test: Basic Route Planner vs. Smart Personalised Planner</h3>
+    <p>We designed a split test across a cohort of 1,800 connected vehicle users (900 per arm) over an 8-week period. The control arm received the existing navigation with a basic "add nearest charger" button. The variant received the Smart Trip Planner with personalised recommendation, dynamic range polygon, and plain-language charger explanation.</p>
+
+    <div class="ab-wrap">
+      <div class="ab-card"><span class="ab-tag control">Control (A)</span><h5>"Basic Route Planner: Nearest Charger Recommendation"</h5><ul><li>Static range circle on map, EPA-rated range</li><li>Single "nearest charger" button, no explanation</li><li>No pricing information shown</li><li>No arrival SoC preference setting</li><li>900 users, 8 weeks, 3,240 qualifying trips</li></ul><div class="ab-metric ctrl">67%</div><span class="ab-metric-label">Trip success without unplanned stop</span><br><br><div class="ab-metric ctrl">41%</div><span class="ab-metric-label">Charger recommendation acceptance rate</span></div>
+      <div class="ab-card winner"><span class="ab-tag variant">Variant (B) · Winner</span><h5>"Smart Planner: Personalised, Dynamic, Explained"</h5><ul><li>Dynamic range polygon updated every 90 seconds</li><li>Charger recommendation with plain-language rationale</li><li>Live pricing from Octopus Energy and Pod Point APIs</li><li>Minimum arrival SoC slider (10-40%) in profile settings</li><li>900 users, 8 weeks, 3,180 qualifying trips</li></ul><div class="ab-metric winner">91%</div><span class="ab-metric-label">Trip success without unplanned stop</span><br><br><div class="ab-metric winner">79%</div><span class="ab-metric-label">Charger recommendation acceptance rate</span></div>
+    </div>
+
+    <div class="highlight green">
+      <span class="highlight-label green">A/B Test Statistical Summary</span>
+      <p>Variant B produced a <strong>+35.8% relative improvement</strong> in trip success rate (67% to 91%) and a <strong>+92.7% relative improvement</strong> in charger recommendation acceptance (41% to 79%). Both results were statistically significant at 99.1% confidence<sup class="ap">(approx.)</sup>, calculated using a chi-squared test on binary outcome data. The test ran for 8 weeks to control for seasonal confounds and weekday versus weekend trip pattern differences. We shipped Variant B globally as the default experience in the next software-over-the-air update.</p>
+    </div>
+  </div>
+
+  <div class="sec-head fade-up vis" id="s4">
+    <span class="sec-num">04 · Product Execution</span>
+    <h2 class="red">PRDs, Sprint Planning, and the<br>Prioritisation Decisions That Shaped the Build</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="fade-up vis">
+    <h3>PRD User Stories: Core Feature Set</h3>
+    <p>I wrote five user stories for the MVP feature set. Below is the most consequential one, which directly addressed the primary finding from user research: the need for a driver-controlled arrival safety margin.</p>
+  </div>
+
+  <div class="us-box fade-up vis">
+    <div class="us-header"><span>User Story · PRD Excerpt · Smart EV Trip Planner</span><span class="us-id">EVTP-US-04 · Sprint 2</span></div>
+    <div class="us-body">
+      <p><strong>Feature:</strong> Minimum Arrival State-of-Charge Preference</p>
+      <p><strong>As a</strong> Range Anxious driver planning a 180-mile trip to an unfamiliar destination,</p>
+      <p><strong>I want to</strong> set a minimum state of charge I am comfortable arriving with (e.g., 20%), so that the system plans my charging stops conservatively and I do not spend the final hour of the drive panicking,</p>
+      <p><strong>So that</strong> I can drive with confidence and focus on the road rather than the battery display.</p>
+      <ul class="ac-list"><li><span class="ac-pill">AC1</span> A slider control in Trip Settings allows the driver to set minimum arrival SoC between 5% and 40% in 5% increments. Default value is 15% for new users, adjustable in profile settings.</li><li><span class="ac-pill">AC2</span> The route planning algorithm treats the minimum arrival SoC as a hard constraint: no route is surfaced that results in predicted arrival SoC below this threshold under worst-case conditions (10th percentile energy consumption for that route profile).</li><li><span class="ac-pill">AC3</span> If the driver's preferred arrival SoC requires an additional charging stop that adds more than 25 minutes to journey time, the system surfaces a comparison: "Conservative plan (25 min longer) vs. Standard plan (arrive with 12%)." Driver selects preferred option.</li><li><span class="ac-pill">AC4</span> During navigation, the in-trip confidence bar displays current projected arrival SoC in real time. If projected SoC drops below the driver's threshold due to changed conditions (higher speed, headwind), the system proactively suggests rerouting to an earlier charger.</li><li><span class="ac-pill">AC5</span> The system learns from driver behaviour: if the driver consistently overrides the conservative setting and arrives with higher SoC than required, it surfaces a suggestion to lower the threshold by 5% after three consecutive trips. Requires driver confirmation before adjusting.</li><li><span class="ac-pill">AC6</span> All SoC projections display the underlying assumption (e.g., "Based on 65 mph average, 12C ambient, HVAC on"). Driver can expand to see sensitivity: how SoC changes at 75 mph vs. 65 mph.</li></ul>
+    </div>
+  </div>
+
+  <div class="fade-up vis">
+    <h3>Hardest Prioritisation Decision: What to Build First</h3>
+    <p>The engineering team estimated the full feature set at 34 sprint points across three capabilities: <strong>(A) battery preconditioning on route</strong> (automatically warming the battery for rapid charging 20 minutes before arrival at a fast charger), <strong>(B) dynamic rerouting for pricing</strong> (suggesting a cheaper charger if a significantly lower-cost option opens up en route), and <strong>(C) integrated in-app payment</strong> (paying for charging directly from the JLR app without a separate network app). All three were valued by users. I had engineering capacity for one in Sprint 1.</p>
+
+    <p>I ran a RICE scoring session with the product and engineering leads to make the trade-off explicit:</p>
+  </div>
+
+  <table class="rice-table fade-up vis">
+    <thead><tr><th>Feature</th><th>Reach (6 mo)</th><th>Impact (1-3)</th><th>Confidence</th><th>Effort (sprints)</th><th>RICE Score</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>Dynamic Rerouting for Pricing</td><td>4,800 users</td><td>3</td><td>80%</td><td>2</td><td><span class="rice-score rice-high">5,760</span></td><td><span class="tag-green">Sprint 1</span></td></tr>
+      <tr><td>Min. Arrival SoC Preference</td><td>4,800 users</td><td>3</td><td>85%</td><td>2</td><td><span class="rice-score rice-high">6,120</span></td><td><span class="tag-green">Sprint 1</span></td></tr>
+      <tr><td>Battery Preconditioning on Route</td><td>2,400 users</td><td>2</td><td>70%</td><td>3</td><td><span class="rice-score rice-medium">1,120</span></td><td><span class="tag-blue">Sprint 3</span></td></tr>
+      <tr><td>Integrated In-App Payment</td><td>4,800 users</td><td>2</td><td>55%</td><td>5</td><td><span class="rice-score rice-medium">1,056</span></td><td><span class="tag-blue">Sprint 4-5</span></td></tr>
+      <tr><td>Post-Trip Efficiency Summary</td><td>4,800 users</td><td>1</td><td>90%</td><td>1</td><td><span class="rice-score rice-medium">4,320</span></td><td><span class="tag-amber">Sprint 2</span></td></tr>
+      <tr><td>Carbon Footprint Tracker</td><td>1,200 users</td><td>1</td><td>60%</td><td>3</td><td><span class="rice-score rice-low">240</span></td><td><span class="tag-amber">Backlog</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="fade-up vis">
+    <p>Battery preconditioning was the technically most impressive feature and was strongly advocated for by the engineering team. But the RICE score told a clear story: it served roughly half the user base (only those using rapid DC chargers, not AC home chargers) and required significant integration with battery management firmware. I deferred it to Sprint 3 and redirected Sprint 1 capacity to the minimum arrival SoC preference and dynamic pricing rerouting, both of which served the full connected vehicle user base and directly addressed the primary pain points from research.</p>
+
+    <h3>Sprint Planning and Cross-Functional Coordination</h3>
+    <p>The squad comprised 4 backend engineers (cloud, API, and route optimisation), 2 HMI designers (head unit interface), 1 mobile engineer (iOS and Android companion app), 1 data engineer (telemetry pipeline), and 1 partner integration lead (energy grid data from Octopus Energy and National Grid ESO). I ran two-week sprints in Jira with a shared Definition of Done that required usability testing sign-off before any user-facing feature was marked complete. Here is a representative sprint board state from Sprint 2:</p>
+  </div>
+
+  <div class="sprint-grid fade-up vis">
+    <div class="sprint-col"><div class="sprint-col-head todo">Backlog / To Do</div><div class="sprint-item"><strong>EVTP-31: Carbon tracker UI</strong>Post-trip carbon offset display for Efficiency Maximisers<span class="sprint-pts">8 pts · Mobile</span></div><div class="sprint-item"><strong>EVTP-34: Charger review integration</strong>Surface Zap-Map ratings inside HMI recommendation card<span class="sprint-pts">5 pts · Backend</span></div><div class="sprint-item"><strong>EVTP-37: Battery preconditioning API</strong>Trigger BMS warm-up 20 min before DC rapid charger ETA<span class="sprint-pts">13 pts · Backend + BMS</span></div></div>
+    <div class="sprint-col"><div class="sprint-col-head doing">In Progress</div><div class="sprint-item"><strong>EVTP-22: Post-trip summary screen</strong>Energy efficiency, cost actuals vs. predicted, trip replay map<span class="sprint-pts">8 pts · Mobile + Backend</span></div><div class="sprint-item"><strong>EVTP-26: Dynamic range polygon</strong>Real-time SoC-aware reachability polygon updating every 90 sec<span class="sprint-pts">13 pts · HMI</span></div><div class="sprint-item"><strong>EVTP-28: Pricing API integration</strong>Octopus Electroverse + Pod Point live tariff ingestion<span class="sprint-pts">8 pts · Data Engineering</span></div></div>
+    <div class="sprint-col"><div class="sprint-col-head done">Done (Sprint 2)</div><div class="sprint-item"><strong>EVTP-12: Min. arrival SoC slider</strong>Profile setting + hard constraint in planning algorithm<span class="sprint-pts">8 pts · HMI + Backend</span></div><div class="sprint-item"><strong>EVTP-15: Charger explanation card</strong>Plain-language rationale beneath recommended stop<span class="sprint-pts">5 pts · HMI</span></div><div class="sprint-item"><strong>EVTP-18: Confidence bar in-trip</strong>Live projected arrival SoC bar with threshold warning state<span class="sprint-pts">8 pts · HMI</span></div><div class="sprint-item"><strong>EVTP-20: Usability test sign-off</strong>Round 2 SUS: 84.2, Grade A. All critical issues resolved<span class="sprint-pts">Research</span></div></div>
+  </div>
+
+  <div class="fade-up vis">
+    <h3>Results and Business Impact</h3>
+
+    <div class="result-band">
+      <div class="rb-cell"><span class="rb-label">Trip Success Rate</span><div class="rb-val">91%</div><span class="rb-note">from 67% in A/B control arm over 8 weeks</span></div>
+      <div class="rb-cell"><span class="rb-label">SUS Score</span><div class="rb-val">84.2</div><span class="rb-note">from 51.3 in baseline; Grade F to Grade A</span></div>
+      <div class="rb-cell"><span class="rb-label">Range Anxiety Score</span><div class="rb-val">44%</div><span class="rb-note">post-launch owner survey, self-reported severity</span></div>
+    </div>
+
+    <p>Post-launch, the product team at JLR integrated Smart Trip Planner engagement as a leading indicator in the quarterly connected services NPS review. Owners who used the planner on more than 60% of their long-distance trips (defined as over 80 miles) showed a <strong>Net Promoter Score of 72</strong><sup class="ap">(approx.)</sup>, versus 41 for non-users of the feature. The feature also reduced inbound calls to the owner helpline about "range issues" by 38%<sup class="ap">(approx.)</sup> in the six months post-launch, representing a meaningful reduction in support cost.</p>
+
+    <p>The dynamic pricing rerouting feature was adopted by 58% of active users within 90 days of launch<sup class="ap">(approx.)</sup>, particularly within the Efficiency Maximiser segment. Average charging cost per mile dropped by approximately 12%<sup class="ap">(approx.)</sup> for users who accepted rerouting suggestions, creating a measurable, personal financial benefit that directly served the value proposition: this is not just less anxious driving, it is materially cheaper driving.</p>
+
+    <h3>Transferable Skills: Why This Is Not Just an Automotive Case Study</h3>
+    <p>Every skill demonstrated in this case study maps cleanly to adjacent domains. The range polygon is a real-time confidence interval rendered spatially, which is the same engineering primitive as a delivery ETA window on a logistics platform or a flight delay probability model on a travel app. The charger recommendation engine is a multi-criteria ranking problem with user preference constraints, identical to hotel or flight sorting on a booking platform. The battery preconditioning feature is a pre-emptive resource allocation problem, directly analogous to pre-loading data for an IoT device before a connectivity window, or pre-heating a building zone before occupancy in an energy management system.</p>
+
+    <div class="highlight green">
+      <span class="highlight-label green">Domain-Agnostic PM Skill Summary</span>
+      <p>The human-centred design methods (think-aloud protocol, SUS scoring, journey mapping) transfer verbatim to any consumer product domain. The telemetry SQL patterns apply directly to any IoT or connected device platform. The RICE-driven prioritisation methodology is domain-neutral. The A/B test design is identical in structure to any digital product experiment. And the core insight, that a user's problem is not a hardware constraint but a decision support failure, is the kind of reframing that defines strong product thinking in any sector.</p>
+    </div>
+
+    <h3>What I Would Do Differently</h3>
+
+    <ul class="learn-list">
+      <li><div class="l-icon">01</div><div class="l-body"><strong>Instrument the anxiety signal directly, not as a proxy:</strong> I used unplanned charging stops as a proxy for range anxiety events. In hindsight, I would have instrumented the in-car display check frequency (how often the driver tapped the battery icon) as a direct behavioural signal. This data existed in the telemetry stream but was not modelled. A higher check frequency is a real-time anxiety signal and would have made the cohort analysis richer.</div></li>
+      <li><div class="l-icon">02</div><div class="l-body"><strong>Ship the companion app feature parity earlier:</strong> The home planning feature on mobile lagged the in-car experience by one full release cycle (approximately 10 weeks). During that gap, users who planned on mobile and then entered the car found the plan was not synced, which generated disproportionate support contacts. A feature flag approach to ship mobile planning in a limited beta would have prevented this.</div></li>
+      <li><div class="l-icon l-icon green">03</div><div class="l-body"><strong>Involve energy grid data partners earlier in PRD review:</strong> The Octopus Energy API integration revealed a data latency issue (tariff updates with a 4-hour lag) only during Sprint 3 technical design review. Had I included the partner integration lead in the Sprint 1 PRD review, we would have designed the pricing display with an explicit "as of" timestamp from the start, avoiding a mid-sprint scope change to the HMI design.</div></li>
+    </ul>
+
+    
+  </div>
+
+  <div class="divider __web-inspector-hide-shortcut__"></div>
+
+  <footer>
+    <p>Smart EV Trip Planner · JLR · Product Case Study</p>
+    <p>Associate Product Manager · Connected Services · 2025</p>
+  </footer>
+
+</div>
+
+<script>
+  const els = document.querySelectorAll('.fade-up');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.07 });
+  els.forEach(el => io.observe(el));
+</script>
+
+</body></html>
