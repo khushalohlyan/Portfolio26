@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khushal Ohlyan — Product Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #F7F5F0;
+    --bg2:       #EFECE5;
+    --ink:       #1C1C1C;
+    --ink-mid:   #444444;
+    --ink-muted: #7A7A7A;
+    --ink-faint: #B0ADA8;
+    --accent:    #3D5A80;
+    --accent2:   #C9897A;
+    --border:    #DDD9D2;
+    --border-mid:#C8C4BC;
+    --rule:      rgba(28,28,28,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Structural rule that runs through the whole page */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; bottom: 0;
+    left: 52px;
+    width: 1px;
+    background: var(--rule);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 0 40px 0 88px;
+  }
+
+  /* TOPBAR
+  ================================ */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 0;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .topbar-brand {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .topbar-nav {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .topbar-nav a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .topbar-nav a:hover { color: var(--ink); }
+
+  /* HERO
+  ================================ */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 80px 0 72px;
+    border-bottom: 1.5px solid var(--ink);
+    max-width: 640px;
+  }
+
+  .hero-left { padding-right: 64px; }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(52px, 6vw, 80px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 32px;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--ink-mid);
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    color: var(--ink-mid);
+    line-height: 1.8;
+    max-width: 440px;
+    margin-bottom: 20px;
+  }
+
+  .hero-credentials {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    margin-bottom: 32px;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border: 1px solid var(--border-mid);
+    padding: 5px 10px;
+    background: transparent;
+  }
+
+  /* Highlights column */
+  .hero-highlights {
+    border-left: 1px solid var(--border);
+    padding-left: 40px;
+    padding-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .highlight-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .highlight-item:last-child { border-bottom: none; }
+
+  .highlight-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .highlight-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  /* Career section */
+  .career {
+    padding: 72px 0;
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .career-timeline {
+    max-width: 620px;
+  }
+
+  .tl-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 28px;
+  }
+
+  .tl-track {
+    position: relative;
+    padding-left: 20px;
+  }
+  .tl-track::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: var(--border-mid);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 22px;
+  }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 7px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--border-mid);
+  }
+  .tl-item.current::before {
+    background: var(--accent);
+  }
+  .tl-item.transition::before {
+    background: var(--accent2);
+  }
+
+  .tl-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 2px;
+  }
+  .tl-role {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .tl-org {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-muted);
+  }
+
+  /* WORK SECTION
+  ================================ */
+  .work {
+    padding: 72px 0;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border-mid);
+  }
+
+  /* Featured card spans full width */
+  .case-card {
+    position: relative;
+    padding: 44px 40px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: background 0.25s;
+    overflow: hidden;
+  }
+  .case-card:nth-child(even) { border-right: none; }
+  .case-card:nth-last-child(-n+2):nth-child(odd):last-child,
+  .case-card:nth-last-child(-n+2):nth-child(even):last-child {
+    border-bottom: none;
+  }
+  /* Remove bottom border from last row */
+  .case-card:nth-child(3),
+  .case-card:nth-child(4) { border-bottom: none; }
+
+  .case-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg2);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .case-card:hover::before { opacity: 1; }
+  .case-card:hover .card-arrow { transform: translate(3px, -3px); }
+
+  .card-inner { position: relative; z-index: 1; }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .card-domain {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+  }
+  .card-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .card-subtitle {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+
+  .card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 32px;
+  }
+  .skill-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+  }
+  .case-card:hover .skill-pill {
+    background: var(--bg2);
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .card-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .card-arrow {
+    font-size: 14px;
+    color: var(--ink-faint);
+    transition: transform 0.2s ease;
+    line-height: 1;
+  }
+
+  /* Accent bar on left of each card */
+  .case-card .accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .case-card:hover .accent-bar { opacity: 1; }
+  .card-primevault .accent-bar { background: #B07D2A; }
+  .card-ev .accent-bar         { background: #1A56DB; }
+  .card-myuob .accent-bar      { background: #0F2D5C; }
+  .card-hrt .accent-bar        { background: #1B4FD8; }
+
+  /* ──────────────────────────────
+     ABOUT / CONTACT STRIP
+  ────────────────────────────── */
+  .contact-strip {
+    border-top: 1.5px solid var(--ink);
+    padding: 48px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .contact-left {
+    padding-right: 56px;
+    border-right: 1px solid var(--border);
+  }
+  .contact-right {
+    padding-left: 56px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+
+  .contact-heading {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .contact-sub {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.7;
+    max-width: 360px;
+    margin-bottom: 28px;
+  }
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mid);
+    text-decoration: none;
+    border: 1px solid var(--border-mid);
+    padding: 9px 18px;
+    background: transparent;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .contact-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: transparent;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .contact-meta {
+    text-align: right;
+  }
+  .meta-item {
+    margin-bottom: 16px;
+  }
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 4px;
+  }
+  .meta-val {
+    font-size: 13px;
+    color: var(--ink-mid);
+  }
+
+  /* FOOTER
+  ================================ */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+  .footer-right {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+  }
+
+  /* RESPONSIVE
+  ================================ */
+  @media (max-width: 760px) {
+    body::before { left: 20px; }
+    .wrap { padding: 0 20px 0 44px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding-right: 0; margin-bottom: 48px; }
+    .hero-highlights { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 32px; }
+    .case-grid { grid-template-columns: 1fr; }
+    .case-card { border-right: none !important; }
+    .case-card:nth-child(3) { border-bottom: 1px solid var(--border) !important; }
+    .case-card:nth-child(4) { border-bottom: none !important; }
+    .contact-strip { grid-template-columns: 1fr; }
+    .contact-left { padding-right: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 40px; margin-bottom: 40px; }
+    .contact-right { padding-left: 0; justify-content: flex-start; }
+    .topbar-nav { gap: 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <span class="topbar-brand">KO · Portfolio</span>
+    <nav>
+      <ul class="topbar-nav">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#career">Career</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Product Manager &amp; Analyst</p>
+      <h1 class="hero-name">Khushal<br><em>Ohlyan</em></h1>
+      <p class="hero-desc">
+        I bring structured user research, data fluency, and cross-functional execution together to ship features that reduce friction, improve retention, and align with strategic roadmaps.
+      </p>
+      <p class="hero-credentials">MSc Human-Computer Interaction, University of Birmingham &nbsp;·&nbsp; Associate Product Manager, JLR</p>
+      <div class="hero-tags">
+        <span class="tag">Product Strategy</span>
+        <span class="tag">User Research</span>
+        <span class="tag">SQL + Analytics</span>
+        <span class="tag">HCI</span>
+        <span class="tag">A/B Testing</span>
+        <span class="tag">Roadmapping</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="work" id="work">
+    <div class="section-head">
+      <span class="section-title">Selected Work</span>
+      <span class="section-count">4 case studies</span>
+    </div>
+
+    <div class="case-grid">
+
+      <!-- Card 1: PrimeVault -->
+      <a class="case-card card-primevault" href="PrimeVault.html">
+        <span class="accent-bar"></span>
+        <div class="card-inner">
+          <div class="card-meta">
+            <span class="card-domain">DeFi / Fintech</span>
+            <span class="card-year">2022–23</span>
+          </div>
+          <h2 class="card-title">PrimeVault<br>DeFi Portfolio Management</h2>
+          <p class="card-subtitle">Designed and validated a DeFi mutual-fund product from discovery through SQL analytics, A/B test design, and a full PRD.</p>
+          <div class="card-skills">
+            <span class="skill-pill">Dune SQL</span>
+            <span class="skill-pill">RICE Framework</span>
+            <span class="skill-pill">A/B Testing</span>
+            <span class="skill-pill">PRD</span>
+            <span class="skill-pill">Web3</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-cta">Read case study</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 2: Smart EV -->
+      <a class="case-card card-ev" href="Smart_EV_Trip_Planner___JLR_Product_Case_Study.html">
+        <span class="accent-bar"></span>
+        <div class="card-inner">
+          <div class="card-meta">
+            <span class="card-domain">Automotive / IoT</span>
+            <span class="card-year">2025</span>
+          </div>
+          <h2 class="card-title">Smart EV Trip Planner<br>JLR</h2>
+          <p class="card-subtitle">Built the PM case for an AI-assisted EV route planner: spatial SQL, SUS scoring, Tableau dashboards, and a sprint-level Jira breakdown.</p>
+          <div class="card-skills">
+            <span class="skill-pill">H3 Spatial SQL</span>
+            <span class="skill-pill">HCI Research</span>
+            <span class="skill-pill">Tableau</span>
+            <span class="skill-pill">Jira</span>
+            <span class="skill-pill">RICE</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-cta">Read case study</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 3: myUoB -->
+      <a class="case-card card-myuob" href="MyUoB.html">
+        <span class="accent-bar"></span>
+        <div class="card-inner">
+          <div class="card-meta">
+            <span class="card-domain">EdTech / Analytics</span>
+            <span class="card-year">2023–24</span>
+          </div>
+          <h2 class="card-title">myUoB App<br>Analytics Deep Dives</h2>
+          <p class="card-subtitle">Three analytics investigations covering study space funnels, waitlist UX, and calendar sync retention using Mixpanel, Hotjar, and propensity score matching.</p>
+          <div class="card-skills">
+            <span class="skill-pill">Mixpanel</span>
+            <span class="skill-pill">Hotjar</span>
+            <span class="skill-pill">Cohort Analysis</span>
+            <span class="skill-pill">Propensity Matching</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-cta">Read case study</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 4: Human-Robot Teaming (research) -->
+      <a class="case-card card-hrt" href="Human-Robot_Teaming.html">
+        <span class="accent-bar"></span>
+        <div class="card-inner">
+          <div class="card-meta">
+            <span class="card-domain">HCI Research</span>
+            <span class="card-year">2023–24</span>
+          </div>
+          <h2 class="card-title">Human-Robot Teaming<br>MSc Research</h2>
+          <p class="card-subtitle">MSc dissertation on trust calibration and mental models in human-robot collaboration: think-aloud protocols, SUS scoring, and qualitative coding.</p>
+          <div class="card-skills">
+            <span class="skill-pill">User Research</span>
+            <span class="skill-pill">Think-Aloud</span>
+            <span class="skill-pill">SUS</span>
+            <span class="skill-pill">Thematic Analysis</span>
+          </div>
+          <div class="card-footer">
+            <span class="card-cta">Read case study</span>
+            <span class="card-arrow">↗</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- CAREER PATH -->
+  <section class="career" id="career">
+    <div class="section-head">
+      <span class="section-title">Career Path</span>
+    </div>
+    <div class="career-timeline">
+      <div class="tl-track">
+
+        <div class="tl-item current">
+          <p class="tl-year">Feb 2025 – Nov 2025</p>
+          <p class="tl-role">Associate Product Manager</p>
+          <p class="tl-org">JLR · Gaydon</p>
+        </div>
+
+        <div class="tl-item current">
+          <p class="tl-year">Sep 2023 – Oct 2024</p>
+          <p class="tl-role">MSc Human-Computer Interaction</p>
+          <p class="tl-org">University of Birmingham</p>
+        </div>
+
+        <div class="tl-item">
+          <p class="tl-year">Sep 2023 – Dec 2024</p>
+          <p class="tl-role">Product Analyst</p>
+          <p class="tl-org">University of Birmingham</p>
+        </div>
+
+        <div class="tl-item transition">
+          <p class="tl-year">Oct 2022 – Sep 2023</p>
+          <p class="tl-role">Associate Product Manager</p>
+          <p class="tl-org">Primeval Labs · Remote</p>
+        </div>
+
+        <div class="tl-item">
+          <p class="tl-year">Aug 2021 – Jun 2022</p>
+          <p class="tl-role">Interior Designer</p>
+          <p class="tl-org">Square Yards · Gurugram</p>
+        </div>
+
+        <div class="tl-item">
+          <p class="tl-year">Aug 2020 – Jul 2021</p>
+          <p class="tl-role">Architect</p>
+          <p class="tl-org">Envisage · Gurugram</p>
+        </div>
+
+        <div class="tl-item">
+          <p class="tl-year">Aug 2015 – Jul 2020</p>
+          <p class="tl-role">B.Arch</p>
+          <p class="tl-org">SUPVA · Rohtak</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT STRIP -->
+  <section class="contact-strip" id="contact">
+    <div class="contact-left">
+      <h2 class="contact-heading">Let's talk<br><em style="font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;">product.</em></h2>
+      <p class="contact-sub">Open to APM, PM, and product analytics roles. I'm drawn to products where user research, systems thinking, and measurable outcomes all pull in the same direction.</p>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:khushalohlyan@gmail.com">
+          khushalohlyan@gmail.com ↗
+        </a>
+        <a class="contact-link" href="https://www.linkedin.com/in/khushalohlyan/" target="_blank" rel="noopener">
+          LinkedIn ↗
+        </a>
+      </div>
+    </div>
+    <div class="contact-right">
+      <div class="contact-meta">
+        <div class="meta-item">
+          <p class="meta-label">Based in</p>
+          <p class="meta-val">Gurugram, India</p>
+        </div>
+        <div class="meta-item">
+          <p class="meta-label">Education</p>
+          <p class="meta-val">MSc HCI, Birmingham</p>
+        </div>
+        <div class="meta-item">
+          <p class="meta-label">Last role</p>
+          <p class="meta-val">APM at JLR</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="footer-left">Khushal Ohlyan · Product Portfolio</span>
+    <span class="footer-right">2026</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
